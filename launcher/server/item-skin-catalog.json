@@ -1,0 +1,230 @@
+{
+  "cosmeticconsume": [
+    "Chaplet_00001",
+    "Chaplet_00002",
+    "EnergyDrink_EnergyT",
+    "HolyRice_00001",
+    "HolyRice_00002",
+    "HolyRice_Halloween",
+    "HolyRice_Komebukuro",
+    "HolyWater_00001",
+    "HolyWater_00002",
+    "HolyWater_PaperShoot",
+    "Holywater_Dipper",
+    "Item_Chaplet_Songkran",
+    "Item_Chaplet_ThunderBeads",
+    "Item_Chaplet_Undying",
+    "Item_EnergyDrink_BubbleTea",
+    "Item_EnergyDrink_Potion",
+    "Item_EnergyDrink_ThaiTea",
+    "Item_Rattan_Amethyst",
+    "Item_Rattan_RaskshasWill",
+    "Item_Rattan_ThunderBlade",
+    "Item_Ratten_BatteredUmbrella",
+    "Item_ScrollBlackViper",
+    "Item_Scroll_RunningTiger",
+    "Item_Scroll_Tarot",
+    "Rattan_00002",
+    "SacredThread_00001",
+    "SacredThread_00002",
+    "SacredThread_Halloween",
+    "SigilScroll_00001",
+    "SigilScroll_00002",
+    "Syringe_00001",
+    "Syringe_00002"
+  ],
+  "sources": [
+    {
+      "id": "Item_Chaplet_Undying",
+      "kind": "ECosmeticConsumeItemSpecificType::CHAPLET",
+      "actor": -2,
+      "source": "Item_Chaplet_Undying"
+    },
+    {
+      "id": "Holywater_Dipper",
+      "kind": "ECosmeticConsumeItemSpecificType::HOLYWATER",
+      "actor": -2,
+      "source": "Holywater_Dipper"
+    },
+    {
+      "id": "Item_Chaplet_Songkran",
+      "kind": "ECosmeticConsumeItemSpecificType::CHAPLET",
+      "actor": -2,
+      "source": "Item_Chaplet_Songkran"
+    },
+    {
+      "id": "HolyRice_Komebukuro",
+      "kind": "ECosmeticConsumeItemSpecificType::HOLYRICE",
+      "actor": -2,
+      "source": "HolyRice_Komebukuro"
+    },
+    {
+      "id": "Syringe_00002",
+      "kind": "ECosmeticConsumeItemSpecificType::SYRINGE",
+      "actor": -1,
+      "source": "Syringe_00002"
+    },
+    {
+      "id": "Chaplet_00002",
+      "kind": "ECosmeticConsumeItemSpecificType::CHAPLET",
+      "actor": -1,
+      "source": "Chaplet_00002"
+    },
+    {
+      "id": "HolyWater_00002",
+      "kind": "ECosmeticConsumeItemSpecificType::HOLYWATER",
+      "actor": -1,
+      "source": "HolyWater_00002"
+    },
+    {
+      "id": "Syringe_00001",
+      "kind": "ECosmeticConsumeItemSpecificType::SYRINGE",
+      "actor": -1,
+      "source": "Syringe_00001"
+    },
+    {
+      "id": "SigilScroll_00002",
+      "kind": "ECosmeticConsumeItemSpecificType::SIGILSCROLL",
+      "actor": -1,
+      "source": "SigilScroll_00002"
+    },
+    {
+      "id": "Item_Scroll_Tarot",
+      "kind": "ECosmeticConsumeItemSpecificType::SIGILSCROLL",
+      "actor": -2,
+      "source": "Item_Scroll_Tarot"
+    },
+    {
+      "id": "Item_Rattan_ThunderBlade",
+      "kind": null,
+      "actor": -2,
+      "source": "Item_Rattan_ThunderBlade"
+    },
+    {
+      "id": "SacredThread_Halloween",
+      "kind": "ECosmeticConsumeItemSpecificType::SACREDTHREAD",
+      "actor": -2,
+      "source": "SacredThread_Halloween"
+    },
+    {
+      "id": "Chaplet_00001",
+      "kind": "ECosmeticConsumeItemSpecificType::CHAPLET",
+      "actor": -1,
+      "source": "Chaplet_00001"
+    },
+    {
+      "id": "SacredThread_00001",
+      "kind": "ECosmeticConsumeItemSpecificType::SACREDTHREAD",
+      "actor": -1,
+      "source": "SacredThread_00001"
+    },
+    {
+      "id": "SacredThread_00002",
+      "kind": "ECosmeticConsumeItemSpecificType::SACREDTHREAD",
+      "actor": -1,
+      "source": "SacredThread_00002"
+    },
+    {
+      "id": "Item_ScrollBlackViper",
+      "kind": "ECosmeticConsumeItemSpecificType::SIGILSCROLL",
+      "actor": -2,
+      "source": "Item_ScrollBlackViper"
+    },
+    {
+      "id": "Item_EnergyDrink_Potion",
+      "kind": "ECosmeticConsumeItemSpecificType::ENERGYWATER",
+      "actor": -2,
+      "source": "Item_EnergyDrink_Potion"
+    },
+    {
+      "id": "Rattan_00002",
+      "kind": null,
+      "actor": -1,
+      "source": "Rattan_00002"
+    },
+    {
+      "id": "Item_EnergyDrink_BubbleTea",
+      "kind": "ECosmeticConsumeItemSpecificType::ENERGYWATER",
+      "actor": -2,
+      "source": "Item_EnergyDrink_BubbleTea"
+    },
+    {
+      "id": "Item_Scroll_RunningTiger",
+      "kind": "ECosmeticConsumeItemSpecificType::SIGILSCROLL",
+      "actor": -2,
+      "source": "Item_Scroll_RunningTiger"
+    },
+    {
+      "id": "Item_Rattan_Amethyst",
+      "kind": null,
+      "actor": -2,
+      "source": "Item_Rattan_Amethyst"
+    },
+    {
+      "id": "HolyRice_00001",
+      "kind": "ECosmeticConsumeItemSpecificType::HOLYRICE",
+      "actor": -1,
+      "source": "HolyRice_00001"
+    },
+    {
+      "id": "HolyRice_00002",
+      "kind": "ECosmeticConsumeItemSpecificType::HOLYRICE",
+      "actor": -1,
+      "source": "HolyRice_00002"
+    },
+    {
+      "id": "Item_Rattan_RaskshasWill",
+      "kind": null,
+      "actor": -2,
+      "source": "Item_Rattan_RaskshasWill"
+    },
+    {
+      "id": "Item_Ratten_BatteredUmbrella",
+      "kind": null,
+      "actor": -2,
+      "source": "Item_Ratten_BatteredUmbrella"
+    },
+    {
+      "id": "HolyWater_PaperShoot",
+      "kind": "ECosmeticConsumeItemSpecificType::HOLYWATER",
+      "actor": -2,
+      "source": "HolyWater_PaperShoot"
+    },
+    {
+      "id": "Item_EnergyDrink_ThaiTea",
+      "kind": "ECosmeticConsumeItemSpecificType::ENERGYWATER",
+      "actor": -2,
+      "source": "Item_EnergyDrink_ThaiTea"
+    },
+    {
+      "id": "EnergyDrink_EnergyT",
+      "kind": "ECosmeticConsumeItemSpecificType::ENERGYWATER",
+      "actor": -2,
+      "source": "EnergyDrink_EnergyT"
+    },
+    {
+      "id": "HolyWater_00001",
+      "kind": "ECosmeticConsumeItemSpecificType::HOLYWATER",
+      "actor": -1,
+      "source": "HolyWater_00001"
+    },
+    {
+      "id": "HolyRice_Halloween",
+      "kind": "ECosmeticConsumeItemSpecificType::HOLYRICE",
+      "actor": -2,
+      "source": "HolyRice_Halloween"
+    },
+    {
+      "id": "SigilScroll_00001",
+      "kind": "ECosmeticConsumeItemSpecificType::SIGILSCROLL",
+      "actor": -1,
+      "source": "SigilScroll_00001"
+    },
+    {
+      "id": "Item_Chaplet_ThunderBeads",
+      "kind": "ECosmeticConsumeItemSpecificType::CHAPLET",
+      "actor": -2,
+      "source": "Item_Chaplet_ThunderBeads"
+    }
+  ]
+}

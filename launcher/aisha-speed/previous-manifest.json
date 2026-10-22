@@ -1,0 +1,39 @@
+{
+  "shipping": "4576f875828cbd19f70c38a38c6d090cc0551c9978f67456c39d58f8a48e964e",
+  "installed": [
+    "da1991f542a9982cc3c9a8eb7158a3c30127f9bc0c58eedc6ba783aeb0d871a1",
+    "1aa376d4dc327d819bf7538e796d749d36782f622b92525bed3060e3521d25b8"
+  ],
+  "accepted_previous": [
+    [
+      "c2c77dee89d5930f177a2c96fca6c9512e6a8191e415eb50384de33e9b59a4a7",
+      "cb01178fd67ac3cf1dbf78ec82db3e29b3934894c4cd8f66480f3b0ba89f7db3"
+    ],
+    [
+      "c2c77dee89d5930f177a2c96fca6c9512e6a8191e415eb50384de33e9b59a4a7",
+      "7cc2c4feb4f3d61bfb0ff30136b9aced8e84c33df0070cecf449ad674e845aa6"
+    ],
+    [
+      "c2c77dee89d5930f177a2c96fca6c9512e6a8191e415eb50384de33e9b59a4a7",
+      "8d843761ae818876640c1523d026a3b43a0db7d5b795fd5610344d758d207c71"
+    ]
+  ],
+  "duration": 3.2,
+  "modifier": "MoveSpeed Multiplicitive 3.0",
+  "cooldown_changed": false,
+  "runtime_verified": false,
+  "variants": [
+    {
+      "previous": [
+        "c2c77dee89d5930f177a2c96fca6c9512e6a8191e415eb50384de33e9b59a4a7",
+        "8d843761ae818876640c1523d026a3b43a0db7d5b795fd5610344d758d207c71"
+      ],
+      "installed": [
+        "da1991f542a9982cc3c9a8eb7158a3c30127f9bc0c58eedc6ba783aeb0d871a1",
+        "44d5cd601e2e09a229fe599896edd7114df207fdb459de53ea431fafd933b6ea"
+      ],
+      "folder": "duration10",
+      "duration": 10.0
+    }
+  ]
+}

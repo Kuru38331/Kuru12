@@ -1,0 +1,25 @@
+{
+  "shipping": "4576f875828cbd19f70c38a38c6d090cc0551c9978f67456c39d58f8a48e964e",
+  "files": [
+    {
+      "path": "HSHO/Content/Game/Blueprints/Character/Survivor/Pang3PSurvivor.uasset",
+      "original": "56f19ce8a979e3f65c85a18f356e42a7c55a92d63def27d3ca5742e20ee80a9c",
+      "installed": "52edc0e2388c8d0eea5587250046adc6c0da5f2eb75663be3cb1731c420596fd"
+    },
+    {
+      "path": "HSHO/Content/Game/Blueprints/Character/Survivor/Pang3PSurvivor.uexp",
+      "original": "c8c101924705ce36092adce398b64731d06ba1bdb3cbbf1f84f5b66c4d9f35cd",
+      "installed": "d338e8181078559fc4d1d3b76d4dd0d48f75e5695fe37b2ceffdb7e749e13a8d"
+    },
+    {
+      "path": "HSHO/Content/Game/Blueprints/CharacterComponents/PerkHandleComponent/PerkHandleSurvivorComponent.uasset",
+      "original": "c283748ca0d47c5bbe6357879a0702ef10ef51dac3bcb9b98243576ca20cd0b6",
+      "installed": "c283748ca0d47c5bbe6357879a0702ef10ef51dac3bcb9b98243576ca20cd0b6"
+    },
+    {
+      "path": "HSHO/Content/Game/Blueprints/CharacterComponents/PerkHandleComponent/PerkHandleSurvivorComponent.uexp",
+      "original": "6090d5f2227e9eb71f8b3fc0374964d4dff91eb263a6b0e51f6c3dacaf833b6d",
+      "installed": "329cf6d0c819e4b551449e39bb5009ea46c6a9b9c813d011c932181dd5aedc85"
+    }
+  ]
+}

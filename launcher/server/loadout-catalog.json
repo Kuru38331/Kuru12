@@ -1,0 +1,341 @@
+{
+  "scope": "Local inventory based on exported assets. Level 1 and full source MaxDurability are local test defaults; no upgrade/purchase economy.",
+  "perks": [
+    "PP_Hunter_AutoGuard",
+    "PP_Hunter_BloodTrail",
+    "PP_Hunter_Bloodthirst",
+    "PP_Hunter_BoogeyPassivePerk",
+    "PP_Hunter_CAKE_DisableHealthPotion",
+    "PP_Hunter_Charlotte_Passiveperk",
+    "PP_Hunter_CheatATK",
+    "PP_Hunter_CounterAttack",
+    "PP_Hunter_DarkOccult",
+    "PP_Hunter_Deadend",
+    "PP_Hunter_DebugOverDmg",
+    "PP_Hunter_DecreaseRitualProgress",
+    "PP_Hunter_Destructor",
+    "PP_Hunter_DevilIntervention",
+    "PP_Hunter_DisPotion",
+    "PP_Hunter_Dontescape",
+    "PP_Hunter_EchoSlam",
+    "PP_Hunter_EndPerform",
+    "PP_Hunter_EnergyGenerator",
+    "PP_Hunter_FallDetector",
+    "PP_Hunter_Fearmonger",
+    "PP_Hunter_Feelsbad",
+    "PP_Hunter_FirstStride",
+    "PP_Hunter_Gathering",
+    "PP_Hunter_GrannyKhamCrouch",
+    "PP_Hunter_GrimFamilyPassive",
+    "PP_Hunter_HRKSense",
+    "PP_Hunter_Helmet",
+    "PP_Hunter_HunterInstinct",
+    "PP_Hunter_HunterSight",
+    "PP_Hunter_HurtLess",
+    "PP_Hunter_Insolence",
+    "PP_Hunter_JumpScare",
+    "PP_Hunter_KamikoDestroyRitual",
+    "PP_Hunter_LastDance",
+    "PP_Hunter_Listener",
+    "PP_Hunter_Malice",
+    "PP_Hunter_Mannequin",
+    "PP_Hunter_MrGreenPassive",
+    "PP_Hunter_NoWayHome",
+    "PP_Hunter_PanoramicSmash",
+    "PP_Hunter_PerfectDodge",
+    "PP_Hunter_Phasing",
+    "PP_Hunter_Poltergeist",
+    "PP_Hunter_PrayerDetector",
+    "PP_Hunter_Revenge",
+    "PP_Hunter_SamingPassive",
+    "PP_Hunter_ScanFrequency",
+    "PP_Hunter_SerialKiller",
+    "PP_Hunter_ShellBarrier",
+    "PP_Hunter_SilenceManPassive",
+    "PP_Hunter_SlipperyHand",
+    "PP_Hunter_SmashRitualAura",
+    "PP_Hunter_SoulSealing",
+    "PP_Hunter_SpecialReceptor",
+    "PP_Hunter_StaminaDrain",
+    "PP_Hunter_Stockpile",
+    "PP_Hunter_SuperJumpScare",
+    "PP_Hunter_Swift",
+    "PP_Hunter_TheFlash",
+    "PP_Hunter_TremorSmash",
+    "PP_Hunter_Uncorrupted",
+    "PP_Hunter_VeronaPassive",
+    "PP_Hunter_Werewolf",
+    "PP_Hunter_WolfAbility",
+    "PP_Survivor_Adrenaline",
+    "PP_Survivor_AishaAP",
+    "PP_Survivor_Athlete",
+    "PP_Survivor_BareThePain",
+    "PP_Survivor_Berserker",
+    "PP_Survivor_BuildWall",
+    "PP_Survivor_Camera",
+    "PP_Survivor_Cat",
+    "PP_Survivor_Challenge",
+    "PP_Survivor_Clairvoyant",
+    "PP_Survivor_Crafting",
+    "PP_Survivor_CrouchingSpeedIncrease",
+    "PP_Survivor_Dance",
+    "PP_Survivor_DaubingAsh",
+    "PP_Survivor_Dodge",
+    "PP_Survivor_DoorSlam",
+    "PP_Survivor_EagleEyes",
+    "PP_Survivor_EmergencyExit",
+    "PP_Survivor_Escape",
+    "PP_Survivor_Evader",
+    "PP_Survivor_FallStaminaBoost",
+    "PP_Survivor_Fighter",
+    "PP_Survivor_Focus",
+    "PP_Survivor_HalfSpell",
+    "PP_Survivor_HandsOfGreed",
+    "PP_Survivor_HealAfterResurrect",
+    "PP_Survivor_HealYourselfWhenReviveFriends",
+    "PP_Survivor_HeraldOfMaster",
+    "PP_Survivor_HolyGift",
+    "PP_Survivor_HolyKnife",
+    "PP_Survivor_HolywaterMaster",
+    "PP_Survivor_IronGrip",
+    "PP_Survivor_ItemScan",
+    "PP_Survivor_KnifeAwake",
+    "PP_Survivor_LastHelp",
+    "PP_Survivor_LetsFightGhost",
+    "PP_Survivor_LockerMan",
+    "PP_Survivor_LowHealthPrayFast",
+    "PP_Survivor_LuckyShot",
+    "PP_Survivor_MoreImmuneTimeAfterRespawn",
+    "PP_Survivor_NewPlayerStamina",
+    "PP_Survivor_NimbleFeet",
+    "PP_Survivor_Overreacting",
+    "PP_Survivor_Panic",
+    "PP_Survivor_PointFinger",
+    "PP_Survivor_QuickHeal",
+    "PP_Survivor_RaiderKick",
+    "PP_Survivor_RaiderKickStep2",
+    "PP_Survivor_RaiderKickStep3",
+    "PP_Survivor_RattanUpgrade",
+    "PP_Survivor_RestoreHealthWhenCrouching",
+    "PP_Survivor_RoyalGuard",
+    "PP_Survivor_SacredString",
+    "PP_Survivor_Savior",
+    "PP_Survivor_SecondChance",
+    "PP_Survivor_SharpEye",
+    "PP_Survivor_SilentPray",
+    "PP_Survivor_SilverLight",
+    "PP_Survivor_SixthSense",
+    "PP_Survivor_Snatcher",
+    "PP_Survivor_SoulSprint",
+    "PP_Survivor_Speaker",
+    "PP_Survivor_Sturdy",
+    "PP_Survivor_SuperheroLanding",
+    "PP_Survivor_Survivalist",
+    "PP_Survivor_Take_A_Rest",
+    "PP_Survivor_ThreadExpert",
+    "PP_Survivor_TreasureHunter",
+    "PP_Survivor_UltimateAnnouncement",
+    "PP_Survivor_WatchYourBack",
+    "PP_Survivor_WeaknessDetector"
+  ],
+  "curseRelic": [
+    {
+      "ShortCode": "Curse_Belle",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_Chan",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_Charlotte",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_Garnet",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_GrannyKham",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_GrimFamily",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_Kamiko",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_Pray",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_Prisoner",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_Ratri",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_Rigger",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_Saming",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_SilenceMan",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_Verona",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Curse_Werewolf",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Aisha",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Aof",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Don",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Gwyneth",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Jane",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_JapanTouristF",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Jessi",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Manop",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Pang3P",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Security",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Stephen",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_StudentF",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Tida",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Tim",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_TimAwake",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Vanz",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_ZBing",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    },
+    {
+      "ShortCode": "Relic_Zico",
+      "Level": 1,
+      "MaxDurability": 20,
+      "CurrentDurability": 20
+    }
+  ]
+}

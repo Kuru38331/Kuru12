@@ -1,0 +1,35 @@
+{
+  "shipping": "4576f875828cbd19f70c38a38c6d090cc0551c9978f67456c39d58f8a48e964e",
+  "files": [
+    {
+      "path": "HSHO/Content/Game/Blueprints/Macro/YGGGameServiceFunctionLibrary.uasset",
+      "installed": "e20793d0cef6a6f2b7d8a09b6239ee74014fb71ad63eb0b8d9f6e4af5ed92c7f",
+      "original": "e20793d0cef6a6f2b7d8a09b6239ee74014fb71ad63eb0b8d9f6e4af5ed92c7f"
+    },
+    {
+      "path": "HSHO/Content/Game/Blueprints/Macro/YGGGameServiceFunctionLibrary.uexp",
+      "installed": "de69a9d1fa7263c69f3ba72541a0094ccdffd19022cae738cb876f9a3dd99649",
+      "original": "2cc1e47769a26944b8009f6e7555bc2b1106c2c295dbf15f7bfde3c0cbb99530"
+    },
+    {
+      "path": "HSHO/Content/Game/Widget/Lobby/Widget_CharacterSelectorNew.uasset",
+      "installed": "eb63036dc0f7f993aff26811fd4fb21082b4b8cc658581715ffbb53ed4ab0ac3",
+      "original": "eb63036dc0f7f993aff26811fd4fb21082b4b8cc658581715ffbb53ed4ab0ac3"
+    },
+    {
+      "path": "HSHO/Content/Game/Widget/Lobby/Widget_CharacterSelectorNew.uexp",
+      "installed": "f8630cf393605b56c1354df85c787972fa4e42b1c0aa4af7618ad80b5637adae",
+      "original": "fb862c6e112dfea600eb50500f6610775de0fe00606000d1d8e16d5f788b2b8b"
+    },
+    {
+      "path": "HSHO/Content/Game/Blueprints/PlayerInfoComponent/PlayerInfoComponent.uasset",
+      "installed": "0ff21fdc3a28d3967f5b29af92cad52c6df5a3a75c666cb5f98dbcc6ac3b5849",
+      "original": "0ff21fdc3a28d3967f5b29af92cad52c6df5a3a75c666cb5f98dbcc6ac3b5849"
+    },
+    {
+      "path": "HSHO/Content/Game/Blueprints/PlayerInfoComponent/PlayerInfoComponent.uexp",
+      "installed": "161a69f19d3f271fe608748d984f726952ebc24e675bfba2f45d9a2f618928df",
+      "original": "fda987699111102e652160755c8bc117b9e06a250d990845d9c716b9a14cf99d"
+    }
+  ]
+}

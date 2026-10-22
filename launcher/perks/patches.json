@@ -1,0 +1,15 @@
+{
+  "shipping": "4576f875828cbd19f70c38a38c6d090cc0551c9978f67456c39d58f8a48e964e",
+  "files": [
+    {
+      "path": "HSHO/Content/Game/Items/PerkPassive/PP_Survivor_Challenge.uasset",
+      "original": "0b80f2d33071b8881cdfb6fed6f78a619cce99fe996d35290d4299e91cc8593f",
+      "installed": "0b80f2d33071b8881cdfb6fed6f78a619cce99fe996d35290d4299e91cc8593f"
+    },
+    {
+      "path": "HSHO/Content/Game/Items/PerkPassive/PP_Survivor_Challenge.uexp",
+      "original": "511a491187704af237c6a3432a342b6bdd32b3b259a0abfc4304c1daf5f67191",
+      "installed": "da133e8ead2940b97b6a9d3d9b6587fe01c6cb53e6e322bafe746365fc18725b"
+    }
+  ]
+}

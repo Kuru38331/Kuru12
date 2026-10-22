@@ -1,0 +1,97 @@
+{
+  "warning": "SPECULATIVE default values; client acceptance unverified; not Steam authentication",
+  "response": {
+    "data": {
+      "player": {
+        "profile": {
+          "display": "",
+          "displayName": "Local Test"
+        },
+        "_id": "local-test-player",
+        "playerStat": {
+          "exp": 0,
+          "level": 0,
+          "mmr4v4": 0,
+          "mmrWarden": 0,
+          "mmrVisitor": 0
+        },
+        "returnPlayerStatus": {
+          "expiresAt": "",
+          "active": false
+        },
+        "playerRecordHunter": {
+          "matchplayedOBT2": 0,
+          "soulsOBT2": 0,
+          "eliminateOBT2": 0,
+          "scoreOBT2": 0,
+          "scoreWardenRampage": 0,
+          "souls": 0,
+          "eliminate": 0,
+          "score": 0,
+          "matchplayed": 0,
+          "scoreWardenCompleteObjective": 0,
+          "scoreWardenChase": 0,
+          "scoreWardenPunishment": 0
+        },
+        "playerRecordSurvivor": {
+          "matchplayedOBT2": 0,
+          "scoreVisitorAssist": 0,
+          "scoreVisitorUseItem": 0,
+          "scoreVisitorDecoy": 0,
+          "scoreVisitorCompleteObjective": 0,
+          "scoreOBT2": 0,
+          "escapeOBT2": 0,
+          "eliminateOBT2": 0,
+          "score": 0,
+          "matchplayed": 0,
+          "escape": 0,
+          "eliminate": 0
+        },
+        "playerRecord": {
+          "4v4matchplayed": 0,
+          "4v4transformcount": 0,
+          "4v4eliminatevisitor": 0,
+          "4v4eliminatewarden": 0,
+          "4v4wardenpunish": 0,
+          "4v4wardenchase": 0,
+          "4v4wardencompleteobjective": 0,
+          "4v4wardenrampage": 0,
+          "4v4visitordecoy": 0,
+          "4v4visitoritem": 0,
+          "4v4visitorassist": 0,
+          "4v4visitorcompleteobjective": 0,
+          "4v4wincount": 0,
+          "4v4totalscore": 0
+        },
+        "amulet": 0,
+        "coin": 0,
+        "amethyst": 0,
+        "role": "",
+        "stickerSlot": {
+          "stickerSet": [],
+          "stickerpreset": 0
+        },
+        "characterSlot": {
+          "characteritem": "",
+          "characterhunteritem": "",
+          "survivorSlot": [],
+          "hunterSlot": []
+        },
+        "session_token": "REPLACED_AT_RUNTIME",
+        "curseRelic": []
+      },
+      "serverInfo": {
+        "correctversion": true,
+        "IsDevOnline": false,
+        "IsOnline": true,
+        "ActivePopUp": false,
+        "AnnouncementOffline": "none",
+        "AnnouncementOnline": "none",
+        "AnnouncementVersion": "local-test"
+      }
+    },
+    "status": 1,
+    "Character_Exp": 0,
+    "Character_Level": 0
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "shipping": "4576f875828cbd19f70c38a38c6d090cc0551c9978f67456c39d58f8a48e964e",
+  "files": [
+    {
+      "path": "HSHO/Content/Game/Widget/Main/CharacterSetting/Widget_CharacterSettingNewV2.uasset",
+      "original": "fe228fde2f477f0a64f29025816c916da4e7ab0fd5806d746abea8508442113f",
+      "installed": "36c9ab3d4a686c0e273d8acc9d589c6ca330f8c5304ea1408f76891d1eb399e8"
+    },
+    {
+      "path": "HSHO/Content/Game/Widget/Main/CharacterSetting/Widget_CharacterSettingNewV2.uexp",
+      "original": "c8ddedbb7e57fea5404d9189d2ab84943d9fcbe71b136782a450ed68cf5221e4",
+      "installed": "85213d4d00d4e9a708e529b085bd5799b11808edad3945bedab74bc70e21b677"
+    }
+  ]
+}

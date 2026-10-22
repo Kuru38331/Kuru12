@@ -1,0 +1,563 @@
+{
+  "scope": "routes constructed from supplied Blueprint literals; not implemented API claims",
+  "routes": [
+    {
+      "route": "/live/player/authen",
+      "source_export": 1,
+      "source_function": "YGG GS Request Authentication Login",
+      "route_runtime_verified": true
+    },
+    {
+      "route": "/preview/player/authen",
+      "source_export": 1,
+      "source_function": "YGG GS Request Authentication Login",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/authen",
+      "source_export": 2,
+      "source_function": "YGG GS Request Authentication Steam",
+      "route_runtime_verified": true
+    },
+    {
+      "route": "/preview/player/authen",
+      "source_export": 2,
+      "source_function": "YGG GS Request Authentication Steam",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/gameplay/checkversion",
+      "source_export": 39,
+      "source_function": "YGG GS Request Server Version",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/gameplay/checkversion",
+      "source_export": 39,
+      "source_function": "YGG GS Request Server Version",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/gameplay/vgoods/get",
+      "source_export": 42,
+      "source_function": "YGG GS Request Get All Virtual Goods",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/gameplay/vgoods/get",
+      "source_export": 42,
+      "source_function": "YGG GS Request Get All Virtual Goods",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/inventory/getAll",
+      "source_export": 43,
+      "source_function": "YGG GS Request GetPlayerInventory",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/inventory/getAll",
+      "source_export": 43,
+      "source_function": "YGG GS Request GetPlayerInventory",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/profile/edit",
+      "source_export": 55,
+      "source_function": "YGG GS Request Save Profile",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/profile/edit",
+      "source_export": 55,
+      "source_function": "YGG GS Request Save Profile",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/sticker/edit",
+      "source_export": 56,
+      "source_function": "YGG GS Request Save Sticker",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/sticker/edit",
+      "source_export": 56,
+      "source_function": "YGG GS Request Save Sticker",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/characterslot/edit",
+      "source_export": 57,
+      "source_function": "YGG GS Request Save CharacterSlot",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/characterslot/edit",
+      "source_export": 57,
+      "source_function": "YGG GS Request Save CharacterSlot",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/gameplay/endgameresult",
+      "source_export": 66,
+      "source_function": "YGG GS Request End Game Save",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/gameplay/endgameresult",
+      "source_export": 66,
+      "source_function": "YGG GS Request End Game Save",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/store/list",
+      "source_export": 107,
+      "source_function": "YGG GS Request Storelist",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/store/list",
+      "source_export": 107,
+      "source_function": "YGG GS Request Storelist",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/store/productlisting/list/id",
+      "source_export": 111,
+      "source_function": "YGG GS Request Productlisting ID",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/store/productlisting/list/id",
+      "source_export": 111,
+      "source_function": "YGG GS Request Productlisting ID",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/item/list/shortcode",
+      "source_export": 112,
+      "source_function": "YGG GS Request Item Shortcode",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/item/list/shortcode",
+      "source_export": 112,
+      "source_function": "YGG GS Request Item Shortcode",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/store/productlisting/list/tag",
+      "source_export": 113,
+      "source_function": "YGG GS Request Product Listing by Tag",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/store/productlisting/list/tag",
+      "source_export": 113,
+      "source_function": "YGG GS Request Product Listing by Tag",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/store/purchase/init",
+      "source_export": 122,
+      "source_function": "YGG GS Request Purchase Init",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/store/purchase/init",
+      "source_export": 122,
+      "source_function": "YGG GS Request Purchase Init",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/store/purchase/init/qty",
+      "source_export": 126,
+      "source_function": "YGG GS Request Purchase Init Quantity",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/store/purchase/init/qty",
+      "source_export": 126,
+      "source_function": "YGG GS Request Purchase Init Quantity",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/productlisting/list",
+      "source_export": 131,
+      "source_function": "YGG GS Request Product List",
+      "route_runtime_verified": true
+    },
+    {
+      "route": "/preview/productlisting/list",
+      "source_export": 131,
+      "source_function": "YGG GS Request Product List",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/store/purchase/finalize",
+      "source_export": 134,
+      "source_function": "YGG GS Request Purchase Finalize",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/store/purchase/finalize",
+      "source_export": 134,
+      "source_function": "YGG GS Request Purchase Finalize",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/item/listall",
+      "source_export": 135,
+      "source_function": "YGG GS Request Item List All",
+      "route_runtime_verified": true
+    },
+    {
+      "route": "/preview/item/listall",
+      "source_export": 135,
+      "source_function": "YGG GS Request Item List All",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/playerstat/get",
+      "source_export": 137,
+      "source_function": "YGG GS Request PlayerStat",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/playerstat/get",
+      "source_export": 137,
+      "source_function": "YGG GS Request PlayerStat",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/characterslot/edit",
+      "source_export": 232,
+      "source_function": "YGG GS Request Save CharacterSlotLogin",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/characterslot/edit",
+      "source_export": 232,
+      "source_function": "YGG GS Request Save CharacterSlotLogin",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/characterslot/edit",
+      "source_export": 235,
+      "source_function": "YGG GS Request Save CharacterSlotNewSelectCharacter",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/characterslot/edit",
+      "source_export": 235,
+      "source_function": "YGG GS Request Save CharacterSlotNewSelectCharacter",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/characterslot/get",
+      "source_export": 242,
+      "source_function": "YGG GS Request Player Character Slot",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/characterslot/get",
+      "source_export": 242,
+      "source_function": "YGG GS Request Player Character Slot",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/curserelic/get",
+      "source_export": 255,
+      "source_function": "YGG GS Request Player Curse and Relic",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/curserelic/get",
+      "source_export": 255,
+      "source_function": "YGG GS Request Player Curse and Relic",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/getban",
+      "source_export": 260,
+      "source_function": "YGG GS Request Check Banned Players",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/getban",
+      "source_export": 260,
+      "source_function": "YGG GS Request Check Banned Players",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/getban",
+      "source_export": 261,
+      "source_function": "YGG GS Request Check Banned SessionToken",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/getban",
+      "source_export": 261,
+      "source_function": "YGG GS Request Check Banned SessionToken",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/player/getban",
+      "source_export": 262,
+      "source_function": "YGG GS Request Check Banned PlayerID",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/player/getban",
+      "source_export": 262,
+      "source_function": "YGG GS Request Check Banned PlayerID",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/store/ghostmarket/list",
+      "source_export": 265,
+      "source_function": "YGG GS Request AnonymousStorelist",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/store/ghostmarket/list",
+      "source_export": 265,
+      "source_function": "YGG GS Request AnonymousStorelist",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/store/ghostmarket/product/update/open/status",
+      "source_export": 267,
+      "source_function": "YGG GS Request Anonymous Open Product",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/store/ghostmarket/product/update/open/status",
+      "source_export": 267,
+      "source_function": "YGG GS Request Anonymous Open Product",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/live/store/purchase/init",
+      "source_export": 268,
+      "source_function": "YGG GS Request Purchase Init Anonymous Product",
+      "route_runtime_verified": false
+    },
+    {
+      "route": "/preview/store/purchase/init",
+      "source_export": 268,
+      "source_function": "YGG GS Request Purchase Init Anonymous Product",
+      "route_runtime_verified": false
+    }
+  ],
+  "known_request_fields": [
+    "4v4eliminatevisitor",
+    "4v4eliminatewarden",
+    "4v4matchplayed",
+    "4v4totalscore",
+    "4v4transformcount",
+    "4v4visitorassist",
+    "4v4visitorcompleteobjective",
+    "4v4visitordecoy",
+    "4v4visitoritem",
+    "4v4wardenchase",
+    "4v4wardencompleteobjective",
+    "4v4wardenpunish",
+    "4v4wardenrampage",
+    "4v4wincount",
+    "@class",
+    "Balance",
+    "Case",
+    "CaseID",
+    "CharacterClass",
+    "Coin",
+    "ComputerID",
+    "Currency",
+    "Data",
+    "DateTime",
+    "Details",
+    "ErrorMessage",
+    "Event",
+    "GSID",
+    "GachaItemID",
+    "Gem",
+    "ItemID",
+    "Letency",
+    "Name",
+    "OrderID",
+    "PackageID",
+    "Player",
+    "PlayerBalance",
+    "Price",
+    "Quantity",
+    "ReportPlayer",
+    "Reporter",
+    "ReturnToken",
+    "SpendAmount",
+    "State",
+    "SteamID",
+    "StoreType",
+    "Success",
+    "TakeItemID",
+    "Temp",
+    "Token",
+    "TransactionID",
+    "Type",
+    "Value",
+    "_id",
+    "amount",
+    "authType",
+    "character",
+    "characterdata",
+    "characterhunteritem",
+    "characteritem",
+    "chase_duration",
+    "clientversion",
+    "code",
+    "cosmetic_Item_chaplet",
+    "cosmetic_Item_energywater",
+    "cosmetic_Item_holyrice",
+    "cosmetic_Item_holywater",
+    "cosmetic_Item_rattan",
+    "cosmetic_Item_sacredthread",
+    "cosmetic_Item_sigilscroll",
+    "cosmetic_Item_syringe",
+    "cosmetic_acc1",
+    "cosmetic_acc2",
+    "cosmetic_acc3",
+    "cosmetic_back",
+    "cosmetic_cloth",
+    "cosmetic_effect",
+    "cosmetic_effect_dead",
+    "cosmetic_effect_kill",
+    "cosmetic_effect_transform",
+    "cosmetic_emote",
+    "cosmetic_hat",
+    "cosmetic_item",
+    "cosmetic_pose",
+    "cosmetic_pose_dead",
+    "cosmetic_pose_victory",
+    "cross_out_kill",
+    "currenctExp",
+    "curseRelic",
+    "damage_dealt_visitor",
+    "damage_dealt_warden",
+    "data",
+    "decoy_duration",
+    "displayName",
+    "display_name",
+    "eliminate",
+    "escape",
+    "eventKey",
+    "exp",
+    "first_state_kill",
+    "gain_exp",
+    "gameSessionArn",
+    "game_type",
+    "gs_id",
+    "hunterSlot",
+    "id_0",
+    "id_1",
+    "id_2",
+    "id_3",
+    "id_4",
+    "id_5",
+    "id_6",
+    "id_7",
+    "id_8",
+    "ignoreDuplicatedID",
+    "influencerCode",
+    "isGhostMarket",
+    "isplayerdisconnect",
+    "istrial",
+    "iswin",
+    "item",
+    "item_offering",
+    "item_talisman",
+    "kill_count",
+    "kill_warden",
+    "level",
+    "level_data",
+    "log",
+    "loot_box_short_code",
+    "macaddress",
+    "mailboxId",
+    "mailboxType",
+    "matchID",
+    "matchId",
+    "match_created",
+    "match_id",
+    "match_player",
+    "match_result",
+    "matchtype",
+    "mmrPoint",
+    "mode",
+    "mvp",
+    "nextLevelExp",
+    "offering",
+    "passiveperk",
+    "password",
+    "perkPassive",
+    "playerID",
+    "playerId",
+    "playerIds",
+    "player_Curse",
+    "player_Relic",
+    "player_id",
+    "player_role",
+    "player_teamup",
+    "productId",
+    "productListingId",
+    "profile",
+    "purchasingId",
+    "qty",
+    "reason",
+    "reportedPlayer",
+    "request",
+    "ritual_complete",
+    "ritual_ghost",
+    "ritual_open",
+    "ritual_stand",
+    "role",
+    "score",
+    "scoreVisitorAssist",
+    "scoreVisitorCompleteObjective",
+    "scoreVisitorDecoy",
+    "scoreVisitorUseItem",
+    "scoreWardenChase",
+    "scoreWardenCompleteObjective",
+    "scoreWardenPunishment",
+    "scoreWardenRampage",
+    "selectedPriceTagIndex",
+    "sessionToken",
+    "session_token",
+    "shortCode",
+    "short_code",
+    "short_codes",
+    "shortcode",
+    "skill",
+    "skill_curse",
+    "skill_relic",
+    "slots",
+    "souls",
+    "stickerInfo",
+    "stickerSet",
+    "stickerpreset",
+    "survivorSlot",
+    "tags",
+    "target",
+    "ticket",
+    "totalCoin",
+    "totalExp",
+    "totalProgressionVisitor",
+    "totalProgressionWarden",
+    "totalScore",
+    "used",
+    "userName",
+    "username",
+    "visitor_disconnect",
+    "visitor_escape",
+    "warden_alive",
+    "warden_disconnect"
+  ]
+}
