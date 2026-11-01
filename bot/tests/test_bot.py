@@ -40,6 +40,11 @@ class ViewTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(view.closed)
         self.assertFalse(bot.busy.intersection(view.ids))
 
+    async def test_star_labels_and_command_description(self):
+        self.assertEqual(bot.unit_label('dragon'),'ราชามังกร [5★]')
+        self.assertEqual(bot.unit_label('paladin'),'พาลาดิน [4★]')
+        self.assertIn('5★',bot.bot.tree.get_command('gacha').description)
+
     async def test_commands_registered(self):
         self.assertEqual({c.name for c in bot.bot.tree.get_commands()}, {'daily','gacha','collection','team','battle'})
 

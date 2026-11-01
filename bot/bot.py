@@ -12,7 +12,7 @@ busy = set()
 
 def unit_label(unit):
     name,rarity,_,_ = CATALOG[unit]
-    return f'{name} [{rarity}]'
+    return f'{name} [{rarity}★]'
 
 class Client(commands.Bot):
     def __init__(self):
@@ -138,17 +138,17 @@ async def daily(interaction: discord.Interaction):
     store.daily(interaction.user.id)
     await interaction.response.send_message('รับ 300 เพชรแล้ว!',ephemeral=True)
 
-@bot.tree.command(name='gacha',description='สุ่มตัวละคร 100 เพชร การันตี SSR ภายใน 50 ครั้ง')
+@bot.tree.command(name='gacha',description='สุ่มตัวละคร 100 เพชร การันตี 5★ ภายใน 50 ครั้ง')
 async def gacha(interaction: discord.Interaction):
     unit = store.pull(interaction.user.id)
     gems,pity,_ = store.profile(interaction.user.id)
-    await interaction.response.send_message(f'ได้ {unit_label(unit)}!\nเพชร {gems} • การันตี {pity}/50\nตัวซ้ำเก็บเป็นจำนวนสะสม',ephemeral=True)
+    await interaction.response.send_message(f'ได้ {unit_label(unit)}!\nเพชร {gems} • การันตี 5★ {pity}/50\nตัวซ้ำเก็บเป็นจำนวนสะสม',ephemeral=True)
 
 @bot.tree.command(name='collection',description='ดูตัวละครและเพชรของคุณ')
 async def collection(interaction: discord.Interaction):
     gems,pity,active = store.profile(interaction.user.id)
     rows = [f'{unit_label(u)} ×{n} (`{u}`)' for u,n in store.collection(interaction.user.id)]
-    await interaction.response.send_message(f'เพชร {gems} • การันตี {pity}/50\nตัวที่ใช้: {unit_label(active)}\n'+'\n'.join(rows),ephemeral=True)
+    await interaction.response.send_message(f'เพชร {gems} • การันตี 5★ {pity}/50\nตัวที่ใช้: {unit_label(active)}\n'+'\n'.join(rows),ephemeral=True)
 
 @bot.tree.command(name='team',description='เลือกตัวละครลงสนาม PvP แบบ 1 ต่อ 1')
 @app_commands.choices(character=[app_commands.Choice(name=unit_label(k),value=k) for k in CATALOG])

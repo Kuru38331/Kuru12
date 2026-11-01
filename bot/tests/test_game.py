@@ -1,7 +1,7 @@
 import tempfile
 import unittest
 from pathlib import Path
-from game import Store, Battle, GameError
+from game import Store, Battle, GameError, CATALOG
 
 class Rolls:
     def random(self): return .99
@@ -35,6 +35,28 @@ class Tests(unittest.TestCase):
         self.assertEqual(self.store.profile(1)[1],0)
         self.store.equip(1,'dragon')
         with self.assertRaises(GameError): self.store.equip(2,'dragon')
+    def test_star_rate_boundaries(self):
+        class FixedRoll(Rolls):
+            def __init__(self, value): self.value = value
+            def random(self): return self.value
+        for uid, (roll, stars) in enumerate(((0,5),(.01999,5),(.02,4),(.11999,4),(.12,3),(.99999,3)),100):
+            with self.subTest(roll=roll):
+                unit = self.store.pull(uid,FixedRoll(roll))
+                self.assertEqual(CATALOG[unit][1],stars)
+                self.assertEqual(self.store.profile(uid)[1],0 if stars==5 else 1)
+
+    def test_existing_collection_and_pity_survive_reopen(self):
+        self.store.profile(1)
+        with self.store.db:
+            self.store.db.execute('INSERT INTO units VALUES(?,?,?)',(1,'paladin',2))
+            self.store.db.execute("UPDATE players SET active='paladin',pity=49 WHERE id=1")
+        self.store.db.close()
+        self.store=Store(self.path)
+        self.assertEqual(self.store.profile(1),(1000,49,'paladin'))
+        self.assertIn(('paladin',2),self.store.collection(1))
+        self.assertEqual(CATALOG['paladin'][1],4)
+        self.assertEqual(CATALOG[self.store.pull(1,Rolls())][1],5)
+
     def test_turns_guard_skill_and_winner(self):
         b=Battle(1,2,self.store,Rolls())
         with self.assertRaises(GameError): b.act(2,'attack')

@@ -4,11 +4,11 @@ import time
 from dataclasses import dataclass
 
 CATALOG = {
-    'knight': ('อัศวิน', 'N', 140, 24),
-    'mage': ('จอมเวท', 'N', 100, 34),
-    'ranger': ('นักธนู', 'R', 120, 32),
-    'paladin': ('พาลาดิน', 'SR', 170, 33),
-    'dragon': ('ราชามังกร', 'SSR', 180, 42),
+    'knight': ('อัศวิน', 3, 140, 24),
+    'mage': ('จอมเวท', 3, 100, 34),
+    'ranger': ('นักธนู', 3, 120, 32),
+    'paladin': ('พาลาดิน', 4, 170, 33),
+    'dragon': ('ราชามังกร', 5, 180, 42),
 }
 
 class GameError(Exception):
@@ -51,9 +51,9 @@ class Store:
             if gems < 100:
                 raise GameError('เพชรไม่พอ ต้องใช้ 100 เพชร')
             roll = rng.random()
-            rarity = 'SSR' if pity >= 49 or roll < .02 else 'SR' if roll < .12 else 'R' if roll < .40 else 'N'
+            rarity = 5 if pity >= 49 or roll < .02 else 4 if roll < .12 else 3
             unit = rng.choice([k for k,v in CATALOG.items() if v[1] == rarity])
-            self.db.execute('UPDATE players SET gems=gems-100,pity=? WHERE id=?',(0 if rarity=='SSR' else pity+1,uid))
+            self.db.execute('UPDATE players SET gems=gems-100,pity=? WHERE id=?',(0 if rarity==5 else pity+1,uid))
             self.db.execute('INSERT INTO units VALUES(?,?,1) ON CONFLICT(player,unit) DO UPDATE SET copies=copies+1',(uid,unit))
         return unit
 
