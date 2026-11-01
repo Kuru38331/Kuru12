@@ -1,6 +1,6 @@
 """Discord-native cards. No network requests or database writes during rendering."""
 import discord
-from game import CATALOG, skill_cost, skill_cooldown, banner_is_open
+from game import CATALOG, skill_cost, skill_cooldown, banner_is_open, ULTIMATES
 
 PURPLE = 0xA78BFA
 GOLD = 0xF5C76B
@@ -38,6 +38,8 @@ def character_embed(unit):
         embed.add_field(name='🦋 อาวุธ · ผีเสื้อแห่งราตรี',value='ฝูงผีเสื้อเงามืดคือคมอาวุธของ Kuru',inline=False)
         embed.add_field(name='โจมตี · ปีกเงา',value='ดาเมจ **16% HP สูงสุด** (เริ่มต้น 38) · ฟื้น 10 MP',inline=False)
         embed.add_field(name='สกิล · ราตรีผีเสื้อ',value='ดาเมจ **32% HP สูงสุด** (เริ่มต้น 76) + **สตั้น 1 เทิร์น**\nใช้ **30 MP** · เว้น **3 เทิร์นที่ลงมือได้** ก่อนใช้ซ้ำ',inline=False)
+        embed.add_field(name='🌘 อันติ · สุริยคราสพันผีเสื้อ',value='ดาเมจ **60% HP สูงสุด** (เริ่มต้น 144) · ใช้พลังอันติ **100** ไม่ใช้ MP\nใช้ได้เฉพาะเทิร์นตัวเอง · ไม่ติดสตั้น · การป้องกันลดดาเมจได้',inline=False)
+        embed.add_field(name='เกจอันติ',value='เริ่ม 0/100 ทุกแมตช์ · โจมตี +25 · สกิล +35 · ป้องกัน +15\nถูกโจมตีแล้วเสีย HP +10 · หลังใช้อันติเกจเหลือ 0',inline=False)
         embed.add_field(name='กลไกสตั้น',value='ข้ามเทิร์นเป้าหมายอัตโนมัติ แสดงในบันทึกการต่อสู้\nการป้องกันลดดาเมจได้ แต่ไม่กันสตั้น · ไม่สตั้นเป้าหมายที่แพ้แล้ว',inline=False)
         embed.add_field(name='ได้รับจาก',value='ตู้ **Kuru Limited** เท่านั้น ไม่อยู่ในตู้ถาวร\nเมื่อออก 5★ จากตู้ Kuru จะเป็น Kuru 100% ไม่มี 50/50',inline=False)
     else:
@@ -49,7 +51,7 @@ def banner_embed(banner='standard'):
         embed=card('🦋 KURU LIMITED • ราตรีผีเสื้อ',
             'ใต้เงาจันทร์… ทุกปีกที่ขยับคือคำตัดสิน\n'
             '**Kuru 5★ · มืด · HP-scaling Stun DPS**')
-        embed.add_field(name='✦ ตัวละคร Limited',value='**Kuru** · อาวุธผีเสื้อ\nHP **240** · สกิล **32% HP สูงสุด** + สตั้น **1 เทิร์น**',inline=False)
+        embed.add_field(name='✦ ตัวละคร Limited',value='**Kuru** · อาวุธผีเสื้อ\nHP **240** · สกิล **32% HP สูงสุด** + สตั้น **1 เทิร์น**\n🌘 อันติ **60% HP สูงสุด** · สุริยคราสพันผีเสื้อ',inline=False)
         embed.add_field(name='💎 อธิษฐานแห่งราตรี',value='**100 เพชร** / 1 ครั้ง · **1,000 เพชร** / 10 ครั้ง',inline=False)
         embed.add_field(name='🎯 การันตีเฉพาะตู้นี้',value='5★ ภายใน **50 ครั้ง** · เมื่อออก 5★ เป็น **Kuru 100%**\n4★ ขึ้นไปภายใน **10 ครั้ง** · ตัวนับแยกจากตู้ถาวร',inline=False)
         embed.add_field(name='อัตราพื้นฐานก่อนการันตี',value='5★ **2%** / 4★ **10%** / 3★ **88%**\n4★: พาลาดิน · 3★: อัศวิน จอมเวท นักธนู',inline=False)
@@ -106,9 +108,12 @@ def battle_embed(ids,battle,history=(),ended=None):
             active=not battle.finished and index==battle.turn
             status='🛡️ ตั้งรับ' if fighter.guard else 'พร้อมรบ'
             skill_state=f'รอ {fighter.cooldown} เทิร์น' if fighter.cooldown else 'พร้อมใช้' if fighter.mana>=cost else 'MP ไม่พอ'
+            ultimate = ''
+            if fighter.unit in ULTIMATES:
+                ultimate = f'\n\n🌘 **{fighter.energy}/100 พลังอันติ**\n`{bar(fighter.energy,100)}`\n'+('**อันติพร้อมใช้!**' if fighter.energy>=100 else 'สะสมพลังเพื่อปลดปล่อยอันติ')
             embed.add_field(name=f'{"▶ " if active else ""}{icon} {unit_label(fighter.unit)}',
                 value=f'<@{fighter.uid}> · {element}\n\n❤️ **{fighter.hp}/{maximum}**\n`{bar(fighter.hp,maximum)}`\n'
-                f'💠 **{fighter.mana}/100 MP**\n`{bar(fighter.mana,100)}`\n\n{scaling} · {status}\n✦ {skill} · {cost} MP · {skill_state}',inline=True)
+                f'💠 **{fighter.mana}/100 MP**\n`{bar(fighter.mana,100)}`\n\n{scaling} · {status}\n✦ {skill} · {cost} MP · {skill_state}{ultimate}',inline=True)
         if battle.finished:
             status=f'🏆 ผู้ชนะ <@{battle.winner}>' if battle.winner else '🤝 เสมอ'
         else:
@@ -116,7 +121,7 @@ def battle_embed(ids,battle,history=(),ended=None):
         embed.add_field(name='สถานะสนาม',value=status,inline=False)
         if history:
             embed.add_field(name='📜 บันทึกการต่อสู้',value='\n'.join(history[-3:]),inline=False)
-        embed.add_field(name='คำสั่งสนามรบ',value='⚔️ โจมตี: ฟื้น 10 MP · 🛡️ ป้องกัน: ลดดาเมจ 50% / ฟื้น 15 MP\n✦ สกิลทั่วไป: 20 MP / เว้น 2 เทิร์น · Kuru: 30 MP / เว้น 3 เทิร์น + สตั้น 1 เทิร์น',inline=False)
+        embed.add_field(name='คำสั่งสนามรบ',value='⚔️ โจมตี: ฟื้น 10 MP · 🛡️ ป้องกัน: ลดดาเมจ 50% / ฟื้น 15 MP\n✦ สกิลทั่วไป: 20 MP / เว้น 2 เทิร์น · Kuru: 30 MP / เว้น 3 เทิร์น + สตั้น 1 เทิร์น\n🌘 อันติ Kuru: ใช้พลัง 100 · ดาเมจ 60% HP สูงสุด · ไม่ใช้ MP',inline=False)
     if ended:
         embed.description=ended
         embed.color=discord.Color.dark_grey()

@@ -14,6 +14,7 @@ CATALOG = {
 }
 
 BANNERS = ('standard','kuru')
+ULTIMATES = {'kuru': {'name':'สุริยคราสพันผีเสื้อ','hp_percent':60,'energy_cost':100}}
 
 def banner_is_open(banner):
     return banner != 'kuru' or os.getenv('KURU_BANNER_OPEN','true').lower() not in ('false','0','no')
@@ -126,6 +127,7 @@ class Fighter:
     mana: int = 100
     max_hp: int = 0
     stunned: int = 0
+    energy: int = 0
 
     def __post_init__(self):
         if self.max_hp == 0:
@@ -151,8 +153,13 @@ class Battle:
         actor,target = self.fighters[self.turn],self.fighters[1-self.turn]
         if actor.uid != uid:
             raise GameError('ยังไม่ถึงตาของคุณ')
-        if action not in ('attack','skill','guard','surrender'):
+        if action not in ('attack','skill','ultimate','guard','surrender'):
             raise GameError('คำสั่งไม่ถูกต้อง')
+        if action == 'ultimate':
+            if actor.unit not in ULTIMATES:
+                raise GameError('ตัวละครนี้ยังไม่มีอันติ')
+            if actor.energy < ULTIMATES[actor.unit]['energy_cost']:
+                raise GameError('เกจอันติยังไม่เต็ม ต้องใช้พลัง 100')
         if action == 'skill' and actor.cooldown:
             raise GameError(f'สกิลรออีก {actor.cooldown} เทิร์นของคุณ')
         if action == 'skill' and actor.mana < skill_cost(actor.unit):
@@ -167,7 +174,10 @@ class Battle:
             actor.mana = min(100,actor.mana+15)
             text = 'ตั้งรับ ลดความเสียหายครั้งถัดไป 50% และฟื้น 15 MP'
         else:
-            if actor.unit == 'kuru':
+            if action == 'ultimate':
+                damage = max(1,actor.max_hp*ULTIMATES[actor.unit]['hp_percent']//100)
+                actor.energy -= ULTIMATES[actor.unit]['energy_cost']
+            elif actor.unit == 'kuru':
                 damage = max(1,actor.max_hp * (32 if action == 'skill' else 16)//100)
             else:
                 damage = actor.attack * (2 if action == 'skill' else 1)
@@ -175,14 +185,19 @@ class Battle:
                 damage //= 2
             target.guard = False
             target.hp = max(0,target.hp-damage)
+            if damage > 0 and target.unit in ULTIMATES:
+                target.energy = min(100,target.energy+10)
             if action == 'skill':
                 actor.cooldown = skill_cooldown(actor.unit)
                 actor.mana -= skill_cost(actor.unit)
                 if actor.unit == 'kuru' and target.hp > 0:
                     target.stunned = 1
-            else:
+            elif action == 'attack':
                 actor.mana = min(100,actor.mana+10)
-            text = f'{"ใช้สกิล" if action == "skill" else "โจมตี"} ทำความเสียหาย {damage}'
+            label = f'🌘 อันติ {ULTIMATES[actor.unit]["name"]}' if action == 'ultimate' else 'ใช้สกิล' if action == 'skill' else 'โจมตี'
+            text = f'{label} ทำความเสียหาย {damage}'
+        if actor.unit in ULTIMATES and action != 'ultimate':
+            actor.energy = min(100,actor.energy+{'attack':25,'skill':35,'guard':15}[action])
         self.rounds += 1
         if target.hp == 0:
             self.finished,self.winner = True,actor.uid

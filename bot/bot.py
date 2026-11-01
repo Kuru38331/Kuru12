@@ -5,7 +5,7 @@ from pathlib import Path
 import discord
 from discord import app_commands
 from discord.ext import commands
-from game import Battle, CATALOG, GameError, Store, skill_cost, banner_is_open
+from game import Battle, CATALOG, GameError, Store, skill_cost, banner_is_open, ULTIMATES
 from presentation import unit_label, card, banner_embed, pity_embed, result_embed, battle_embed, STYLE, character_embed
 
 store = Store(os.getenv('GACHA_DB', str(Path(__file__).with_name('gacha.sqlite3'))))
@@ -101,12 +101,16 @@ class Duel(GameView):
         self.refresh_buttons()
 
     def refresh_buttons(self):
-        for button in (self.attack,self.skill,self.guard,self.surrender):
+        for button in (self.attack,self.skill,self.ultimate,self.guard,self.surrender):
             button.disabled=self.battle is None or self.closed
         if self.battle and not self.closed:
             actor=self.battle.fighters[self.battle.turn]
             self.skill.label=STYLE[actor.unit][2]+f' · {skill_cost(actor.unit)} MP'
             self.skill.disabled=actor.cooldown>0 or actor.mana<skill_cost(actor.unit)
+            ultimate=ULTIMATES.get(actor.unit)
+            self.ultimate.label=('อันติ · '+ultimate['name']) if ultimate else 'อันติ · ยังไม่มี'
+            self.ultimate.disabled=ultimate is None or actor.energy<ultimate['energy_cost']
+            self.ultimate.style=discord.ButtonStyle.danger if not self.ultimate.disabled else discord.ButtonStyle.secondary
 
     def close(self):
         self.closed = True
@@ -177,6 +181,10 @@ class Duel(GameView):
     @discord.ui.button(label='ป้องกัน',emoji='🛡️',style=discord.ButtonStyle.secondary,row=1)
     async def guard(self, interaction, button):
         await self.move(interaction,'guard')
+
+    @discord.ui.button(label='อันติ · ชาร์จพลัง',emoji='🌘',style=discord.ButtonStyle.secondary,row=2)
+    async def ultimate(self, interaction, button):
+        await self.move(interaction,'ultimate')
 
     @discord.ui.button(label='ยอมแพ้',emoji='🏳️',style=discord.ButtonStyle.danger,row=2)
     async def surrender(self, interaction, button):
