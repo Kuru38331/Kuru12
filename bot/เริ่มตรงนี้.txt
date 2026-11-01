@@ -1,0 +1,21 @@
+วิธีเปิดบอทบน Windows
+
+1. ติดตั้ง Python 3.10 ขึ้นไปจาก python.org ถ้ายังไม่มี
+2. แตก ZIP ทั้งหมดลงโฟลเดอร์ก่อน
+3. ดับเบิลคลิก START-BOT.bat จะติดตั้งไลบรารีให้อัตโนมัติ
+4. วาง Discord Bot Token แล้วกด Enter (ข้อความจะไม่แสดงเพื่อป้องกันคนอื่นเห็น)
+5. ใส่ Server ID เพื่อทดสอบคำสั่งได้เร็ว หรือกด Enter ข้าม
+6. เปิด Discord ใช้ /daily /gacha /collection /team และ /battle
+
+ต้องสร้างบอทที่ Discord Developer Portal และเชิญเข้าเซิร์ฟเวอร์ก่อน
+เลือก OAuth2 scopes: bot และ applications.commands
+สิทธิ์ที่ใช้: View Channels และ Send Messages
+ไม่ต้องเปิด Message Content Intent
+
+Token จะไม่ถูกบันทึกลงไฟล์ ต้องใส่ใหม่เมื่อเปิดบอท
+ห้ามส่ง Token ให้คนอื่น หากรั่วให้กด Reset Token ใน Developer Portal
+เก็บหน้าต่างนี้ไว้ระหว่างใช้งาน ปิดหน้าต่างแล้วบอทจะออฟไลน์
+ข้อมูลผู้เล่นอยู่ใน gacha.sqlite3 อย่าลบถ้าต้องการเก็บข้อมูลเดิม
+รันบอทเพียงหน้าต่างเดียว คำท้าและแมตช์จะหายเมื่อรีสตาร์ต
+
+คู่มือเพิ่มเติม: README.md
