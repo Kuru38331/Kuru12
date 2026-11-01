@@ -23,9 +23,28 @@ class Client(commands.Bot):
         if guild:
             target = discord.Object(id=int(guild))
             self.tree.copy_global_to(guild=target)
-            await self.tree.sync(guild=target)
+            try:
+                await self.tree.sync(guild=target)
+            except discord.Forbidden as error:
+                if error.code != 50001:
+                    raise
+                self.tree.clear_commands(guild=target)
+                logging.warning(
+                    'Cannot access server %s (Discord 50001). Check the Server ID and '
+                    'invite this bot to that server with bot + applications.commands scopes. '
+                    'Registering global commands instead; they may take time to appear.', guild)
+                await self.tree.sync()
+            else:
+                logging.info('Registered commands for server %s', guild)
         else:
             await self.tree.sync()
+
+    async def on_ready(self):
+        logging.info('Bot connected as %s (ID %s)', self.user, self.user.id)
+        invite = discord.utils.oauth_url(
+            self.application_id, permissions=discord.Permissions(view_channel=True, send_messages=True),
+            scopes=('bot', 'applications.commands'))
+        print('Bot online. Invite this bot to your server:', invite, flush=True)
 
 bot = Client()
 

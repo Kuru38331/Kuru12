@@ -1,7 +1,7 @@
 import os
 import tempfile
 import unittest
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, patch, call
 from types import SimpleNamespace
 
 os.environ['GACHA_DB'] = ':memory:'
@@ -42,3 +42,41 @@ class ViewTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_commands_registered(self):
         self.assertEqual({c.name for c in bot.bot.tree.get_commands()}, {'daily','gacha','collection','team','battle'})
+
+
+class StartupTests(unittest.IsolatedAsyncioTestCase):
+    async def test_missing_server_access_falls_back_to_global(self):
+        response = SimpleNamespace(status=403, reason='Forbidden')
+        error = bot.discord.Forbidden(response, {'code':50001, 'message':'Missing Access'})
+        client = bot.Client()
+        try:
+            with patch.dict(os.environ, {'DISCORD_GUILD_ID':'123'}), patch.object(client.tree, 'sync', new=AsyncMock(side_effect=[error, []])) as sync:
+                with self.assertLogs(level='WARNING') as logs:
+                    await client.setup_hook()
+                self.assertEqual(sync.await_count, 2)
+                self.assertEqual(sync.await_args_list[0].kwargs['guild'].id,123)
+                self.assertEqual(sync.await_args_list[1],call())
+                self.assertIn('Registering global commands', logs.output[0])
+        finally:
+            await client.close()
+
+    async def test_accessible_server_does_not_sync_globally(self):
+        client = bot.Client()
+        try:
+            with patch.dict(os.environ, {'DISCORD_GUILD_ID':'123'}), patch.object(client.tree, 'sync', new=AsyncMock(return_value=[])) as sync:
+                await client.setup_hook()
+                sync.assert_awaited_once()
+                self.assertEqual(sync.await_args.kwargs['guild'].id,123)
+        finally:
+            await client.close()
+
+    async def test_unrelated_forbidden_is_not_hidden(self):
+        error = bot.discord.Forbidden(SimpleNamespace(status=403,reason='Forbidden'), {'code':50013,'message':'Missing Permissions'})
+        client = bot.Client()
+        try:
+            with patch.dict(os.environ, {'DISCORD_GUILD_ID':'123'}), patch.object(client.tree,'sync',new=AsyncMock(side_effect=error)) as sync:
+                with self.assertRaises(bot.discord.Forbidden):
+                    await client.setup_hook()
+                sync.assert_awaited_once()
+        finally:
+            await client.close()
