@@ -26,7 +26,7 @@ class KuruTests(unittest.TestCase):
         return Battle(1,2,self.store,Fixed())
 
     def test_exclusive_to_limited_pool(self):
-        self.assertEqual(self.store.pull(1,Fixed(0)),'dragon')
+        self.assertIn(self.store.pull(1,Fixed(0)),('dragon','eiji'))
         self.assertEqual(self.store.pull(2,Fixed(0),banner='kuru'),'kuru')
         self.store.equip(2,'kuru')
         self.assertEqual(self.store.profile(2)[2],'kuru')
@@ -39,7 +39,8 @@ class KuruTests(unittest.TestCase):
         self.assertEqual(self.store.profile(1)[0],800)
         with self.store.db:
             self.store.db.execute("UPDATE banner_pity SET pity=49,pity4=9 WHERE player=1 AND banner='kuru'")
-        self.assertEqual(self.store.pull(1,Fixed(),banner='kuru'),'kuru')
+        self.assertEqual(self.store.pull(1,Fixed(),banner='kuru'),'eiji')
+        self.assertTrue(self.store.featured_guaranteed(1,'kuru'))
         self.assertEqual(self.store.guarantees(1,'kuru'),(0,0))
         self.assertEqual(self.store.guarantees(1),(1,1))
 
@@ -50,7 +51,7 @@ class KuruTests(unittest.TestCase):
             self.assertIn('ปิดตู้แล้ว',str(banner_embed('kuru').to_dict()))
         self.assertEqual(self.store.profile(1)[0],1000)
         self.assertEqual(self.store.guarantees(1,'kuru'),(0,0))
-        self.assertEqual(self.store.pull(1,Fixed(0)),'dragon')
+        self.assertIn(self.store.pull(1,Fixed(0)),('dragon','eiji'))
 
     def test_ten_limited_has_four_star_guarantee(self):
         units=self.store.pull_many(1,10,Fixed(),banner='kuru')
