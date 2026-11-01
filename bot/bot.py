@@ -311,11 +311,60 @@ async def battle(interaction: discord.Interaction, opponent: discord.Member,mode
         view.close()
         raise
 
+def require_admin(interaction,member=None):
+    if not interaction.guild_id or not interaction.permissions.administrator:
+        raise GameError('คำสั่งนี้ใช้ได้เฉพาะ Administrator ในเซิร์ฟเวอร์')
+    trusted=os.getenv('ADMIN_GUILD_ID') or os.getenv('DISCORD_GUILD_ID')
+    if trusted:
+        if not trusted.isascii() or not trusted.isdecimal():
+            raise GameError('ตั้งค่า ADMIN_GUILD_ID หรือ DISCORD_GUILD_ID ไม่ถูกต้อง')
+        if int(trusted)!=interaction.guild_id:
+            raise GameError('คำสั่งแอดมินใช้ได้เฉพาะเซิร์ฟเวอร์ที่กำหนด')
+    if member is not None and (member.bot or member.guild.id!=interaction.guild_id):
+        raise GameError('เลือกผู้เล่นที่ไม่ใช่บอทและอยู่ในเซิร์ฟเวอร์นี้')
+
+admin=app_commands.Group(name='admin',description='คำสั่งเสกของสำหรับ Administrator',guild_only=True,default_permissions=discord.Permissions(administrator=True))
+
+@admin.command(name='gems',description='เพิ่มเพชรให้ผู้เล่น')
+@app_commands.checks.has_permissions(administrator=True)
+async def admin_gems(interaction: discord.Interaction,member: discord.Member,amount: app_commands.Range[int,1,1000000000],reason: str='แอดมินแจกของ'):
+    require_admin(interaction,member)
+    store.admin_grant(interaction.id,interaction.user.id,interaction.guild_id,member.id,'gems',amount,reason=reason)
+    gems,_,_=store.profile(member.id)
+    await interaction.response.send_message(embed=card('💎 เพิ่มเพชรสำเร็จ',f'ผู้เล่น <@{member.id}>\nเพิ่ม **{amount:,}** · คงเหลือ **{gems:,}**'),ephemeral=True)
+
+@admin.command(name='character',description='เพิ่มตัวละครให้ผู้เล่น รวมตัว Limited')
+@app_commands.checks.has_permissions(administrator=True)
+@app_commands.choices(character=UNIT_CHOICES)
+async def admin_character(interaction: discord.Interaction,member: discord.Member,character: app_commands.Choice[str],copies: app_commands.Range[int,1,1000]=1,reason: str='แอดมินแจกของ'):
+    require_admin(interaction,member)
+    store.admin_grant(interaction.id,interaction.user.id,interaction.guild_id,member.id,'character',copies,character.value,reason)
+    await interaction.response.send_message(embed=card('✦ เพิ่มตัวละครสำเร็จ',f'<@{member.id}> ได้รับ **{unit_label(character.value)} ×{copies}**\nใช้ /team หรือ /squad เพื่อเลือกลงสนาม'),ephemeral=True)
+
+@admin.command(name='team',description='แจก Kuru Eiji Yuko Mala อย่างละ 1 และจัดทีมให้ทันที')
+@app_commands.checks.has_permissions(administrator=True)
+async def admin_team(interaction: discord.Interaction,member: discord.Member,reason: str='แอดมินแจกทีมทดสอบ'):
+    require_admin(interaction,member)
+    if member.id in busy:raise GameError('ผู้เล่นกำลังมีคำท้าหรือต่อสู้อยู่ รอจบก่อนแจกและเปลี่ยนทีม')
+    store.admin_grant(interaction.id,interaction.user.id,interaction.guild_id,member.id,'team',reason=reason)
+    await interaction.response.send_message(embed=card('⚔️ ทีมพร้อมลงสนาม',f'<@{member.id}> ได้ **Kuru / Eiji / Yuko Hanaka / Mala Natsumi** อย่างละ 1\nบันทึกทีม 4v4 แล้ว และเลือก Kuru สำหรับ 1v1'),ephemeral=True)
+
+@admin.command(name='logs',description='ดูประวัติการเสกของล่าสุด 10 รายการของเซิร์ฟเวอร์')
+@app_commands.checks.has_permissions(administrator=True)
+async def admin_logs(interaction: discord.Interaction):
+    require_admin(interaction)
+    rows=store.admin_history(interaction.guild_id)
+    lines=[f'<t:{timestamp}:R> <@{actor}> → <@{target}> · {action} `{item}` ×{amount:,}' for timestamp,actor,target,action,item,amount in rows]
+    await interaction.response.send_message(embed=card('📜 ประวัติแอดมิน','\n'.join(lines) or 'ยังไม่มีรายการ'),ephemeral=True)
+
+bot.tree.add_command(admin)
+
 @bot.tree.error
 async def command_error(interaction, error):
     cause = getattr(error,'original',error)
-    message = str(cause) if isinstance(cause,GameError) else 'เกิดข้อผิดพลาด ลองใหม่อีกครั้ง'
-    if not isinstance(cause,GameError):
+    expected=isinstance(cause,(GameError,app_commands.MissingPermissions,app_commands.NoPrivateMessage))
+    message = str(cause) if isinstance(cause,GameError) else 'คำสั่งนี้ใช้ได้เฉพาะ Administrator ในเซิร์ฟเวอร์' if expected else 'เกิดข้อผิดพลาด ลองใหม่อีกครั้ง'
+    if not expected:
         logging.error('Command failed',exc_info=(type(cause),cause,cause.__traceback__))
     if interaction.response.is_done():
         await interaction.followup.send(message,ephemeral=True)

@@ -43,6 +43,7 @@ class Store:
         self.db.executescript('''
         CREATE TABLE IF NOT EXISTS players(id INTEGER PRIMARY KEY, gems INTEGER NOT NULL DEFAULT 1000, daily INTEGER NOT NULL DEFAULT -1, pity INTEGER NOT NULL DEFAULT 0, active TEXT NOT NULL DEFAULT 'knight');
         CREATE TABLE IF NOT EXISTS units(player INTEGER, unit TEXT, copies INTEGER NOT NULL, PRIMARY KEY(player,unit));
+        CREATE TABLE IF NOT EXISTS admin_audit(request TEXT PRIMARY KEY, time INTEGER NOT NULL, actor INTEGER NOT NULL, guild INTEGER NOT NULL, target INTEGER NOT NULL, action TEXT NOT NULL, item TEXT NOT NULL, amount INTEGER NOT NULL, reason TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS squads(player INTEGER PRIMARY KEY, units TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS banner_pity(player INTEGER, banner TEXT, pity INTEGER NOT NULL DEFAULT 0, pity4 INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(player,banner));
         ''')
@@ -153,6 +154,42 @@ class Store:
                 self.db.execute('UPDATE players SET gems=gems-? WHERE id=?',(count*100,uid))
                 self.db.execute('UPDATE banner_pity SET pity=?,pity4=?,featured=? WHERE player=? AND banner=?',(pity,pity4,int(featured),uid,banner))
         return units
+
+    def admin_grant(self,request,actor,guild,target,action,amount=1,item='',reason='แอดมินแจกของ'):
+        if action not in ('gems','character','team'):
+            raise GameError('ประเภทของไม่ถูกต้อง')
+        limit=1_000_000_000 if action=='gems' else 1000 if action=='character' else 1
+        if type(amount) is not int or not 1<=amount<=limit:
+            raise GameError(f'จำนวนต้องอยู่ระหว่าง 1 ถึง {limit:,}')
+        if action=='character' and item not in CATALOG:
+            raise GameError('ไม่พบตัวละครนี้')
+        if not isinstance(reason,str) or len(reason)>200:
+            raise GameError('เหตุผลยาวได้ไม่เกิน 200 ตัวอักษร')
+        if action=='team':item='kuru,eiji,yuko,mala'
+        if action=='gems':item='gems'
+        with self.db:
+            if self.db.execute('SELECT 1 FROM admin_audit WHERE request=?',(str(request),)).fetchone():
+                raise GameError('คำสั่งนี้ดำเนินการแล้ว ไม่เพิ่มของซ้ำ')
+            self.ensure(target)
+            if action=='gems':
+                balance=self.db.execute('SELECT gems FROM players WHERE id=?',(target,)).fetchone()[0]
+                if balance+amount>1_000_000_000_000:
+                    raise GameError('ยอดเพชรรวมเกินเพดาน 1 ล้านล้าน')
+                self.db.execute('UPDATE players SET gems=gems+? WHERE id=?',(amount,target))
+            else:
+                units=['kuru','eiji','yuko','mala'] if action=='team' else [item]
+                for unit in units:
+                    count=self.db.execute('SELECT copies FROM units WHERE player=? AND unit=?',(target,unit)).fetchone()
+                    if (count[0] if count else 0)+amount>1_000_000:
+                        raise GameError('จำนวนสำเนาตัวละครเกินเพดาน')
+                    self.db.execute('INSERT INTO units VALUES(?,?,?) ON CONFLICT(player,unit) DO UPDATE SET copies=copies+excluded.copies',(target,unit,amount))
+                if action=='team':
+                    self.db.execute('UPDATE players SET active=? WHERE id=?',('kuru',target))
+                    self.db.execute('INSERT INTO squads VALUES(?,?) ON CONFLICT(player) DO UPDATE SET units=excluded.units',(target,json.dumps(units)))
+            self.db.execute('INSERT INTO admin_audit VALUES(?,?,?,?,?,?,?,?,?)',(str(request),int(time.time()),actor,guild,target,action,item,amount,reason))
+
+    def admin_history(self,guild):
+        return self.db.execute('SELECT time,actor,target,action,item,amount FROM admin_audit WHERE guild=? ORDER BY time DESC,rowid DESC LIMIT 10',(guild,)).fetchall()
 
     def equip(self, uid, unit):
         with self.db:
