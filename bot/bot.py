@@ -6,13 +6,10 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from game import Battle, CATALOG, GameError, Store
+from presentation import unit_label, card, banner_embed, pity_embed, result_embed, battle_embed, STYLE
 
 store = Store(os.getenv('GACHA_DB', str(Path(__file__).with_name('gacha.sqlite3'))))
 busy = set()
-
-def unit_label(unit):
-    name,rarity,_,_ = CATALOG[unit]
-    return f'{name} [{rarity}★]'
 
 class Client(commands.Bot):
     def __init__(self):
@@ -42,19 +39,73 @@ class Client(commands.Bot):
     async def on_ready(self):
         logging.info('Bot connected as %s (ID %s)', self.user, self.user.id)
         invite = discord.utils.oauth_url(
-            self.application_id, permissions=discord.Permissions(view_channel=True, send_messages=True),
+            self.application_id, permissions=discord.Permissions(view_channel=True, send_messages=True, embed_links=True, attach_files=True),
             scopes=('bot', 'applications.commands'))
         print('Bot online. Invite this bot to your server:', invite, flush=True)
 
 bot = Client()
 
-class Duel(discord.ui.View):
+class GameView(discord.ui.View):
+    async def on_error(self, interaction, error, item):
+        message=str(error) if isinstance(error,GameError) else 'เกิดข้อผิดพลาด ลองใหม่อีกครั้ง'
+        if not isinstance(error,GameError):
+            logging.error('Button failed',exc_info=(type(error),error,error.__traceback__))
+        if interaction.response.is_done():
+            await interaction.followup.send(message,ephemeral=True)
+        else:
+            await interaction.response.send_message(message,ephemeral=True)
+
+class SummonView(GameView):
+    def __init__(self):
+        super().__init__(timeout=600)
+        self.message=None
+
+    async def summon(self,interaction,count):
+        try:
+            units=store.pull_many(interaction.user.id,count)
+        except GameError as error:
+            await interaction.response.send_message(str(error),ephemeral=True)
+            return
+        await interaction.response.send_message(embed=result_embed(store,interaction.user.id,units),ephemeral=True)
+
+    @discord.ui.button(label='สุ่ม 1 ครั้ง · 100',emoji='💎',style=discord.ButtonStyle.success)
+    async def single(self,interaction,button):
+        await self.summon(interaction,1)
+
+    @discord.ui.button(label='สุ่ม 10 ครั้ง · 1,000',emoji='🌌',style=discord.ButtonStyle.primary)
+    async def ten(self,interaction,button):
+        await self.summon(interaction,10)
+
+    @discord.ui.button(label='ดูการันตี',emoji='🎯',style=discord.ButtonStyle.secondary)
+    async def pity(self,interaction,button):
+        await interaction.response.send_message(embed=pity_embed(store,interaction.user.id),ephemeral=True)
+
+    async def on_timeout(self):
+        for child in self.children:
+            child.disabled=True
+        if self.message:
+            try:
+                await self.message.edit(view=self)
+            except discord.HTTPException:
+                logging.exception('Could not disable expired banner')
+
+class Duel(GameView):
     def __init__(self, challenger, opponent):
         super().__init__(timeout=120)
         self.ids = (challenger,opponent)
         self.battle = None
         self.message = None
         self.closed = False
+        self.history=[]
+        self.refresh_buttons()
+
+    def refresh_buttons(self):
+        for button in (self.attack,self.skill,self.guard,self.surrender):
+            button.disabled=self.battle is None or self.closed
+        if self.battle and not self.closed:
+            actor=self.battle.fighters[self.battle.turn]
+            self.skill.label=STYLE[actor.unit][2]+' · 20 MP'
+            self.skill.disabled=actor.cooldown>0 or actor.mana<20
 
     def close(self):
         self.closed = True
@@ -64,20 +115,13 @@ class Duel(discord.ui.View):
         self.stop()
 
     def render(self, text=''):
-        if not self.battle:
-            return f'<@{self.ids[0]}> ท้า <@{self.ids[1]}> ต่อสู้! ฝ่ายถูกท้ากดรับคำท้าภายใน 120 วินาที'
-        lines = [f'<@{f.uid}> • {unit_label(f.unit)} • HP {f.hp} • สกิลรอ {f.cooldown}' for f in self.battle.fighters]
-        if self.battle.finished:
-            lines.append(f'ผู้ชนะ: <@{self.battle.winner}>' if self.battle.winner else 'เสมอ')
-        else:
-            lines.append(f'ตาของ <@{self.battle.fighters[self.battle.turn].uid}>')
-        return '\n'.join(lines+[text])
+        return battle_embed(self.ids,self.battle,self.history,ended=text or None)
 
     async def on_timeout(self):
         self.close()
         if self.message:
             try:
-                await self.message.edit(content='หมดเวลาการต่อสู้ ยกเลิกแมตช์แล้ว', view=self)
+                await self.message.edit(content=None,embed=self.render('⌛ หมดเวลาการต่อสู้ ยกเลิกแมตช์แล้ว'),view=self)
             except discord.HTTPException:
                 logging.exception('Could not update expired duel')
 
@@ -87,22 +131,24 @@ class Duel(discord.ui.View):
             return False
         return True
 
-    @discord.ui.button(label='รับคำท้า', style=discord.ButtonStyle.success)
+    @discord.ui.button(label='รับคำท้า',emoji='⚔️',style=discord.ButtonStyle.success,row=0)
     async def accept(self, interaction, button):
         if self.battle or interaction.user.id != self.ids[1]:
             await interaction.response.send_message('เฉพาะผู้ถูกท้าเท่านั้นที่รับคำท้าได้', ephemeral=True)
             return
         self.battle = Battle(*self.ids,store)
-        button.disabled = True
-        await interaction.response.edit_message(content=self.render(),view=self)
+        self.remove_item(self.accept)
+        self.remove_item(self.cancel)
+        self.refresh_buttons()
+        await interaction.response.edit_message(content=None,embed=self.render(),view=self)
 
-    @discord.ui.button(label='ปฏิเสธ / ยกเลิก', style=discord.ButtonStyle.secondary)
+    @discord.ui.button(label='ปฏิเสธ / ยกเลิก',style=discord.ButtonStyle.secondary,row=0)
     async def cancel(self, interaction, button):
         if self.battle:
             await interaction.response.send_message('ใช้ปุ่มยอมแพ้เพื่อออกจากการต่อสู้',ephemeral=True)
             return
         self.close()
-        await interaction.response.edit_message(content='ยกเลิกคำท้าแล้ว',view=self)
+        await interaction.response.edit_message(content=None,embed=self.render('ยกเลิกคำท้าแล้ว'),view=self)
 
     async def move(self, interaction, action):
         if not self.battle:
@@ -113,42 +159,56 @@ class Duel(discord.ui.View):
         except GameError as error:
             await interaction.response.send_message(str(error),ephemeral=True)
             return
+        self.history.append(f'<@{interaction.user.id}> › {text}')
         if self.battle.finished:
             self.close()
-        await interaction.response.edit_message(content=self.render(text),view=self)
+        self.refresh_buttons()
+        await interaction.response.edit_message(content=None,embed=self.render(),view=self)
 
-    @discord.ui.button(label='โจมตี', style=discord.ButtonStyle.primary)
+    @discord.ui.button(label='โจมตี',emoji='⚔️',style=discord.ButtonStyle.primary,row=1)
     async def attack(self, interaction, button):
         await self.move(interaction,'attack')
 
-    @discord.ui.button(label='สกิล', style=discord.ButtonStyle.danger)
+    @discord.ui.button(label='สกิล · 20 MP',emoji='✨',style=discord.ButtonStyle.primary,row=1)
     async def skill(self, interaction, button):
         await self.move(interaction,'skill')
 
-    @discord.ui.button(label='ป้องกัน', row=1)
+    @discord.ui.button(label='ป้องกัน',emoji='🛡️',style=discord.ButtonStyle.secondary,row=1)
     async def guard(self, interaction, button):
         await self.move(interaction,'guard')
 
-    @discord.ui.button(label='ยอมแพ้', row=1)
+    @discord.ui.button(label='ยอมแพ้',emoji='🏳️',style=discord.ButtonStyle.danger,row=2)
     async def surrender(self, interaction, button):
         await self.move(interaction,'surrender')
+
+async def show_banner(interaction):
+    view=SummonView()
+    image=Path(__file__).with_name('assets')/'summon-banner.png'
+    await interaction.response.send_message(embed=banner_embed(),view=view,file=discord.File(image,filename='summon-banner.png'))
+    view.message=await interaction.original_response()
 
 @bot.tree.command(name='daily',description='รับ 300 เพชรรายวัน')
 async def daily(interaction: discord.Interaction):
     store.daily(interaction.user.id)
-    await interaction.response.send_message('รับ 300 เพชรแล้ว!',ephemeral=True)
+    gems,_,_=store.profile(interaction.user.id)
+    await interaction.response.send_message(embed=card('💎 ของขวัญจากดวงดาว',f'รับ **300 เพชร** แล้ว!\nยอดคงเหลือ **{gems:,} 💎**\nเปิด `/banner` เพื่อเริ่มสุ่ม'),ephemeral=True)
 
-@bot.tree.command(name='gacha',description='สุ่มตัวละคร 100 เพชร การันตี 5★ ภายใน 50 ครั้ง')
+@bot.tree.command(name='gacha',description='เปิดตู้กาชา 5★ พร้อมปุ่มสุ่ม 1 / 10 ครั้ง')
 async def gacha(interaction: discord.Interaction):
-    unit = store.pull(interaction.user.id)
-    gems,pity,_ = store.profile(interaction.user.id)
-    await interaction.response.send_message(f'ได้ {unit_label(unit)}!\nเพชร {gems} • การันตี 5★ {pity}/50\nตัวซ้ำเก็บเป็นจำนวนสะสม',ephemeral=True)
+    await show_banner(interaction)
+
+@bot.tree.command(name='banner',description='เปิดแบนเนอร์กาชาและดูการันตีส่วนตัว')
+async def banner(interaction: discord.Interaction):
+    await show_banner(interaction)
 
 @bot.tree.command(name='collection',description='ดูตัวละครและเพชรของคุณ')
 async def collection(interaction: discord.Interaction):
     gems,pity,active = store.profile(interaction.user.id)
-    rows = [f'{unit_label(u)} ×{n} (`{u}`)' for u,n in store.collection(interaction.user.id)]
-    await interaction.response.send_message(f'เพชร {gems} • การันตี 5★ {pity}/50\nตัวที่ใช้: {unit_label(active)}\n'+'\n'.join(rows),ephemeral=True)
+    rows = [f'{STYLE[u][0]} **{unit_label(u)}** ×{n}' for u,n in store.collection(interaction.user.id)]
+    embed=card('✦ หอแห่งผู้ร่วมเดินทาง',f'💎 **{gems:,}** · การันตี 5★ **{pity}/50**\nลงสนาม: **{unit_label(active)}**')
+    embed.add_field(name='คอลเลกชันของคุณ',value='\n'.join(rows),inline=False)
+    embed.set_footer(text='ASTRAL • ใช้ /team เพื่อเลือกตัวละครลงสนาม')
+    await interaction.response.send_message(embed=embed,ephemeral=True)
 
 @bot.tree.command(name='team',description='เลือกตัวละครลงสนาม PvP แบบ 1 ต่อ 1')
 @app_commands.choices(character=[app_commands.Choice(name=unit_label(k),value=k) for k in CATALOG])
@@ -169,7 +229,7 @@ async def battle(interaction: discord.Interaction, opponent: discord.Member):
     view = Duel(uid,opponent.id)
     busy.update(view.ids)
     try:
-        await interaction.response.send_message(view.render(), view=view, allowed_mentions=discord.AllowedMentions(users=True))
+        await interaction.response.send_message(content=f'<@{opponent.id}> มีคำท้าประลองถึงคุณ',embed=view.render(),view=view,allowed_mentions=discord.AllowedMentions(users=True))
         view.message = await interaction.original_response()
     except Exception:
         view.close()

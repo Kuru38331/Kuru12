@@ -5,11 +5,11 @@
 3. ดับเบิลคลิก START-BOT.bat จะติดตั้งไลบรารีให้อัตโนมัติ
 4. วาง Discord Bot Token แล้วกด Enter (ข้อความจะไม่แสดงเพื่อป้องกันคนอื่นเห็น)
 5. ใส่ Server ID เพื่อทดสอบคำสั่งได้เร็ว หรือกด Enter ข้าม
-6. เปิด Discord ใช้ /daily /gacha /collection /team และ /battle
+6. เปิด Discord ใช้ /daily /banner /collection /team และ /battle
 
 ต้องสร้างบอทที่ Discord Developer Portal และเชิญเข้าเซิร์ฟเวอร์ก่อน
 เลือก OAuth2 scopes: bot และ applications.commands
-สิทธิ์ที่ใช้: View Channels และ Send Messages
+สิทธิ์ที่ใช้: View Channels, Send Messages, Embed Links และ Attach Files
 ไม่ต้องเปิด Message Content Intent
 
 Token จะไม่ถูกบันทึกลงไฟล์ ต้องใส่ใหม่เมื่อเปิดบอท
@@ -19,3 +19,6 @@ Token จะไม่ถูกบันทึกลงไฟล์ ต้อง�
 รันบอทเพียงหน้าต่างเดียว คำท้าและแมตช์จะหายเมื่อรีสตาร์ต
 
 คู่มือเพิ่มเติม: README.md
+
+รุ่น UI ใหม่: /banner เปิดตู้กาชา กดปุ่มสุ่ม 1/10 ครั้ง ดูการันตีเป็นการส่วนตัว
+หน้าต่อสู้แสดง HP/MP สกิลและประวัติเทิร์น ต้องเก็บโฟลเดอร์ assets ไว้กับ bot.py
