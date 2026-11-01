@@ -5,8 +5,8 @@ from pathlib import Path
 import discord
 from discord import app_commands
 from discord.ext import commands
-from game import Battle, CATALOG, GameError, Store
-from presentation import unit_label, card, banner_embed, pity_embed, result_embed, battle_embed, STYLE
+from game import Battle, CATALOG, GameError, Store, skill_cost, banner_is_open
+from presentation import unit_label, card, banner_embed, pity_embed, result_embed, battle_embed, STYLE, character_embed
 
 store = Store(os.getenv('GACHA_DB', str(Path(__file__).with_name('gacha.sqlite3'))))
 busy = set()
@@ -56,17 +56,18 @@ class GameView(discord.ui.View):
             await interaction.response.send_message(message,ephemeral=True)
 
 class SummonView(GameView):
-    def __init__(self):
+    def __init__(self,banner='standard'):
         super().__init__(timeout=600)
+        self.banner=banner
         self.message=None
 
     async def summon(self,interaction,count):
         try:
-            units=store.pull_many(interaction.user.id,count)
+            units=store.pull_many(interaction.user.id,count,banner=self.banner)
         except GameError as error:
             await interaction.response.send_message(str(error),ephemeral=True)
             return
-        await interaction.response.send_message(embed=result_embed(store,interaction.user.id,units),ephemeral=True)
+        await interaction.response.send_message(embed=result_embed(store,interaction.user.id,units,self.banner),ephemeral=True)
 
     @discord.ui.button(label='สุ่ม 1 ครั้ง · 100',emoji='💎',style=discord.ButtonStyle.success)
     async def single(self,interaction,button):
@@ -78,7 +79,7 @@ class SummonView(GameView):
 
     @discord.ui.button(label='ดูการันตี',emoji='🎯',style=discord.ButtonStyle.secondary)
     async def pity(self,interaction,button):
-        await interaction.response.send_message(embed=pity_embed(store,interaction.user.id),ephemeral=True)
+        await interaction.response.send_message(embed=pity_embed(store,interaction.user.id,self.banner),ephemeral=True)
 
     async def on_timeout(self):
         for child in self.children:
@@ -104,8 +105,8 @@ class Duel(GameView):
             button.disabled=self.battle is None or self.closed
         if self.battle and not self.closed:
             actor=self.battle.fighters[self.battle.turn]
-            self.skill.label=STYLE[actor.unit][2]+' · 20 MP'
-            self.skill.disabled=actor.cooldown>0 or actor.mana<20
+            self.skill.label=STYLE[actor.unit][2]+f' · {skill_cost(actor.unit)} MP'
+            self.skill.disabled=actor.cooldown>0 or actor.mana<skill_cost(actor.unit)
 
     def close(self):
         self.closed = True
@@ -181,10 +182,14 @@ class Duel(GameView):
     async def surrender(self, interaction, button):
         await self.move(interaction,'surrender')
 
-async def show_banner(interaction):
-    view=SummonView()
-    image=Path(__file__).with_name('assets')/'summon-banner.png'
-    await interaction.response.send_message(embed=banner_embed(),view=view,file=discord.File(image,filename='summon-banner.png'))
+async def show_banner(interaction,banner='standard'):
+    view=SummonView(banner)
+    if not banner_is_open(banner):
+        view.single.disabled=True
+        view.ten.disabled=True
+    filename='kuru-banner.png' if banner=='kuru' else 'summon-banner.png'
+    image=Path(__file__).with_name('assets')/filename
+    await interaction.response.send_message(embed=banner_embed(banner),view=view,file=discord.File(image,filename=filename))
     view.message=await interaction.original_response()
 
 @bot.tree.command(name='daily',description='รับ 300 เพชรรายวัน')
@@ -195,17 +200,25 @@ async def daily(interaction: discord.Interaction):
 
 @bot.tree.command(name='gacha',description='เปิดตู้กาชา 5★ พร้อมปุ่มสุ่ม 1 / 10 ครั้ง')
 async def gacha(interaction: discord.Interaction):
-    await show_banner(interaction)
+    await show_banner(interaction,'kuru')
 
 @bot.tree.command(name='banner',description='เปิดแบนเนอร์กาชาและดูการันตีส่วนตัว')
-async def banner(interaction: discord.Interaction):
-    await show_banner(interaction)
+@app_commands.choices(banner=[app_commands.Choice(name='🦋 Kuru Limited',value='kuru'),app_commands.Choice(name='🐉 ตู้ถาวร',value='standard')])
+async def banner(interaction: discord.Interaction,banner: app_commands.Choice[str]=None):
+    await show_banner(interaction,banner.value if banner else 'kuru')
+
+@bot.tree.command(name='character',description='ดูค่าสถานะ อาวุธ และสกิลของตัวละคร')
+@app_commands.choices(character=[app_commands.Choice(name=unit_label(k),value=k) for k in CATALOG])
+async def character(interaction: discord.Interaction,character: app_commands.Choice[str]):
+    await interaction.response.send_message(embed=character_embed(character.value),ephemeral=True)
 
 @bot.tree.command(name='collection',description='ดูตัวละครและเพชรของคุณ')
 async def collection(interaction: discord.Interaction):
     gems,pity,active = store.profile(interaction.user.id)
     rows = [f'{STYLE[u][0]} **{unit_label(u)}** ×{n}' for u,n in store.collection(interaction.user.id)]
-    embed=card('✦ หอแห่งผู้ร่วมเดินทาง',f'💎 **{gems:,}** · การันตี 5★ **{pity}/50**\nลงสนาม: **{unit_label(active)}**')
+    embed=card('✦ หอแห่งผู้ร่วมเดินทาง',f'💎 **{gems:,}** · การันตีตู้ถาวร 5★ **{pity}/50**\nลงสนาม: **{unit_label(active)}**')
+    limited_pity,_=store.guarantees(interaction.user.id,'kuru')
+    embed.add_field(name='🦋 การันตี Kuru Limited',value=f'{limited_pity}/50 · นับแยกจากตู้ถาวร',inline=False)
     embed.add_field(name='คอลเลกชันของคุณ',value='\n'.join(rows),inline=False)
     embed.set_footer(text='ASTRAL • ใช้ /team เพื่อเลือกตัวละครลงสนาม')
     await interaction.response.send_message(embed=embed,ephemeral=True)

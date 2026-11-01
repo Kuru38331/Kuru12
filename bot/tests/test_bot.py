@@ -46,7 +46,7 @@ class ViewTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn('5★',bot.bot.tree.get_command('gacha').description)
 
     async def test_commands_registered(self):
-        self.assertEqual({c.name for c in bot.bot.tree.get_commands()}, {'daily','gacha','banner','collection','team','battle'})
+        self.assertEqual({c.name for c in bot.bot.tree.get_commands()}, {'daily','gacha','banner','collection','team','battle','character'})
 
 
 class StartupTests(unittest.IsolatedAsyncioTestCase):

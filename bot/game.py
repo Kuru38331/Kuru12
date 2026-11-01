@@ -1,3 +1,4 @@
+import os
 import random
 import sqlite3
 import time
@@ -9,7 +10,19 @@ CATALOG = {
     'ranger': ('นักธนู', 3, 120, 32),
     'paladin': ('พาลาดิน', 4, 170, 33),
     'dragon': ('ราชามังกร', 5, 180, 42),
+    'kuru': ('Kuru', 5, 240, 0),
 }
+
+BANNERS = ('standard','kuru')
+
+def banner_is_open(banner):
+    return banner != 'kuru' or os.getenv('KURU_BANNER_OPEN','true').lower() not in ('false','0','no')
+
+def skill_cost(unit):
+    return 30 if unit == 'kuru' else 20
+
+def skill_cooldown(unit):
+    return 3 if unit == 'kuru' else 2
 
 class GameError(Exception):
     pass
@@ -21,6 +34,7 @@ class Store:
         self.db.executescript('''
         CREATE TABLE IF NOT EXISTS players(id INTEGER PRIMARY KEY, gems INTEGER NOT NULL DEFAULT 1000, daily INTEGER NOT NULL DEFAULT -1, pity INTEGER NOT NULL DEFAULT 0, active TEXT NOT NULL DEFAULT 'knight');
         CREATE TABLE IF NOT EXISTS units(player INTEGER, unit TEXT, copies INTEGER NOT NULL, PRIMARY KEY(player,unit));
+        CREATE TABLE IF NOT EXISTS banner_pity(player INTEGER, banner TEXT, pity INTEGER NOT NULL DEFAULT 0, pity4 INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(player,banner));
         ''')
         columns = {row[1] for row in self.db.execute('PRAGMA table_info(players)')}
         if 'pity4' not in columns:
@@ -48,31 +62,50 @@ class Store:
                 raise GameError('รับรางวัลวันนี้แล้ว กลับมาใหม่หลัง 07:00 น. เวลาไทย')
         return 300
 
-    def guarantees(self, uid):
+    def guarantees(self, uid, banner='standard'):
         self.profile(uid)
-        return self.db.execute('SELECT pity,pity4 FROM players WHERE id=?',(uid,)).fetchone()
+        if banner not in BANNERS:
+            raise GameError('ไม่พบตู้กาชานี้')
+        if banner == 'standard':
+            return self.db.execute('SELECT pity,pity4 FROM players WHERE id=?',(uid,)).fetchone()
+        row = self.db.execute('SELECT pity,pity4 FROM banner_pity WHERE player=? AND banner=?',(uid,banner)).fetchone()
+        return row or (0,0)
 
-    def pull(self, uid, rng=random):
-        return self.pull_many(uid,1,rng)[0]
+    def pull(self, uid, rng=random, banner='standard'):
+        return self.pull_many(uid,1,rng,banner=banner)[0]
 
-    def pull_many(self, uid, count, rng=random):
+    def pull_many(self, uid, count, rng=random, banner='standard'):
         if type(count) is not int or count not in (1,10):
             raise GameError('เลือกสุ่มได้ครั้งละ 1 หรือ 10 ครั้ง')
+        if banner not in BANNERS:
+            raise GameError('ไม่พบตู้กาชานี้')
+        if not banner_is_open(banner):
+            raise GameError('ตู้ Kuru Limited ปิดแล้ว เพชรยังอยู่ครบ')
         with self.db:
             self.ensure(uid)
             gems,pity,pity4 = self.db.execute('SELECT gems,pity,pity4 FROM players WHERE id=?',(uid,)).fetchone()
+            if banner != 'standard':
+                self.db.execute('INSERT OR IGNORE INTO banner_pity(player,banner) VALUES(?,?)',(uid,banner))
+                pity,pity4 = self.db.execute('SELECT pity,pity4 FROM banner_pity WHERE player=? AND banner=?',(uid,banner)).fetchone()
             if gems < count*100:
                 raise GameError(f'เพชรไม่พอ ต้องใช้ {count*100:,} เพชร ลองรับ /daily ก่อน')
             units = []
             for _ in range(count):
                 roll = rng.random()
                 rarity = 5 if pity >= 49 or roll < .02 else 4 if pity4 >= 9 or roll < .12 else 3
-                unit = rng.choice([k for k,v in CATALOG.items() if v[1] == rarity])
+                pool = [k for k,v in CATALOG.items() if v[1] == rarity and k != 'kuru']
+                if banner == 'kuru' and rarity == 5:
+                    pool = ['kuru']
+                unit = rng.choice(pool)
                 pity = 0 if rarity == 5 else pity+1
                 pity4 = 0 if rarity >= 4 else pity4+1
                 self.db.execute('INSERT INTO units VALUES(?,?,1) ON CONFLICT(player,unit) DO UPDATE SET copies=copies+1',(uid,unit))
                 units.append(unit)
-            self.db.execute('UPDATE players SET gems=gems-?,pity=?,pity4=? WHERE id=?',(count*100,pity,pity4,uid))
+            if banner == 'standard':
+                self.db.execute('UPDATE players SET gems=gems-?,pity=?,pity4=? WHERE id=?',(count*100,pity,pity4,uid))
+            else:
+                self.db.execute('UPDATE players SET gems=gems-? WHERE id=?',(count*100,uid))
+                self.db.execute('UPDATE banner_pity SET pity=?,pity4=? WHERE player=? AND banner=?',(pity,pity4,uid,banner))
         return units
 
     def equip(self, uid, unit):
@@ -91,6 +124,12 @@ class Fighter:
     guard: bool = False
     cooldown: int = 0
     mana: int = 100
+    max_hp: int = 0
+    stunned: int = 0
+
+    def __post_init__(self):
+        if self.max_hp == 0:
+            self.max_hp = self.hp
 
 class Battle:
     def __init__(self, first, second, store, rng=random):
@@ -116,8 +155,8 @@ class Battle:
             raise GameError('คำสั่งไม่ถูกต้อง')
         if action == 'skill' and actor.cooldown:
             raise GameError(f'สกิลรออีก {actor.cooldown} เทิร์นของคุณ')
-        if action == 'skill' and actor.mana < 20:
-            raise GameError('มานาไม่พอ ต้องใช้ 20 MP')
+        if action == 'skill' and actor.mana < skill_cost(actor.unit):
+            raise GameError(f'มานาไม่พอ ต้องใช้ {skill_cost(actor.unit)} MP')
         if action == 'surrender':
             self.finished, self.winner = True,target.uid
             return 'ยอมแพ้'
@@ -128,14 +167,19 @@ class Battle:
             actor.mana = min(100,actor.mana+15)
             text = 'ตั้งรับ ลดความเสียหายครั้งถัดไป 50% และฟื้น 15 MP'
         else:
-            damage = actor.attack * (2 if action == 'skill' else 1)
+            if actor.unit == 'kuru':
+                damage = max(1,actor.max_hp * (32 if action == 'skill' else 16)//100)
+            else:
+                damage = actor.attack * (2 if action == 'skill' else 1)
             if target.guard:
                 damage //= 2
             target.guard = False
             target.hp = max(0,target.hp-damage)
             if action == 'skill':
-                actor.cooldown = 2
-                actor.mana -= 20
+                actor.cooldown = skill_cooldown(actor.unit)
+                actor.mana -= skill_cost(actor.unit)
+                if actor.unit == 'kuru' and target.hp > 0:
+                    target.stunned = 1
             else:
                 actor.mana = min(100,actor.mana+10)
             text = f'{"ใช้สกิล" if action == "skill" else "โจมตี"} ทำความเสียหาย {damage}'
@@ -147,4 +191,14 @@ class Battle:
             text += ' • ครบ 100 เทิร์น เสมอ'
         else:
             self.turn = 1-self.turn
+            if target.stunned:
+                target.stunned -= 1
+                target.guard = False
+                self.rounds += 1
+                text += '\n🦋 สตั้น: คู่ต่อสู้ข้าม 1 เทิร์น!'
+                if self.rounds >= 100:
+                    self.finished = True
+                    text += ' • ครบ 100 เทิร์น เสมอ'
+                else:
+                    self.turn = 1-self.turn
         return text
